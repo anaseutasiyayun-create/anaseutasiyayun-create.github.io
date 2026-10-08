@@ -1,0 +1,20 @@
+{
+  "name": "taskboard",
+  "version": "1.0.0",
+  "description": "Канбан-доска задач: REST API на Node.js + Express, хранение в JSON-файле или MySQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "author": "Анастасия Кириченко",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "mysql2": "^3.11.0"
+  }
+}

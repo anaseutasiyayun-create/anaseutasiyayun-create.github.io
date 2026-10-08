@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Учёт расходов</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="back" href="../index.html">← Учебные проекты</a>
+    <main class="app">
+      <div class="head">
+        <h1>Учёт расходов</h1>
+        <select id="month" aria-label="Месяц"></select>
+      </div>
+
+      <div class="layout">
+        <section class="card">
+          <h2>Новый расход</h2>
+          <form id="form" novalidate>
+            <div class="row">
+              <label
+                >Сумма, ₽<input
+                  id="amount"
+                  type="text"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  placeholder="0"
+              /></label>
+              <label>Дата<input id="date" type="date" /></label>
+            </div>
+            <label>Категория<select id="category"></select></label>
+            <label
+              >Комментарий<input
+                id="note"
+                type="text"
+                maxlength="60"
+                placeholder="Например, продукты на неделю"
+            /></label>
+            <p class="error" id="error" role="alert"></p>
+            <button class="add" type="submit">Добавить</button>
+          </form>
+        </section>
+
+        <section class="card">
+          <p class="total" id="total">0 ₽</p>
+          <p class="total-label" id="totalLabel"></p>
+          <div class="bar" id="bar"></div>
+          <ul class="cats" id="cats"></ul>
+          <div class="list" id="list"></div>
+        </section>
+      </div>
+    </main>
+
+    <div class="toast" id="toast" hidden>
+      <span>Расход удалён</span><button id="undo" type="button">Вернуть</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

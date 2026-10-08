@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Интер-Авто АКПП — ремонт АКПП, DSG и CVT в Оренбурге</title>
+    <meta
+      name="description"
+      content="Профессиональный ремонт АКПП, DSG и CVT с гарантией. Точная диагностика, качественный ремонт и полный контроль каждого этапа."
+    />
+    <script>
+      document.documentElement.classList.add('js');
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute">
+      <defs>
+        <symbol id="i-phone" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"
+          />
+        </symbol>
+        <symbol
+          id="i-user"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
+        </symbol>
+        <symbol
+          id="i-calendar"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M3 10h18M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2" />
+        </symbol>
+        <symbol
+          id="i-arrow"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"
+          />
+        </symbol>
+        <symbol
+          id="i-clock"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
+        </symbol>
+        <symbol id="i-chat" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 3C6.5 3 2 6.9 2 11.7c0 2.6 1.3 4.9 3.4 6.5L4.6 22l4.3-2.2c1 .3 2 .4 3.1.4 5.5 0 10-3.9 10-8.7S17.5 3 12 3z"
+          />
+        </symbol>
+        <symbol
+          id="i-mail"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m3 7 9 6 9-6" />
+        </symbol>
+        <symbol
+          id="i-akpp"
+          viewBox="0 0 48 48"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linejoin="round"
+        >
+          <rect x="10" y="14" width="24" height="20" rx="3" />
+          <path d="M34 19h6v10h-6M4 20h6v8H4z" />
+          <path d="M15 14v20M20 14v20M25 14v20M29 14v20" />
+          <circle cx="40" cy="24" r="1.5" fill="currentColor" />
+        </symbol>
+        <symbol
+          id="i-dsg"
+          viewBox="0 0 48 48"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linejoin="round"
+        >
+          <rect x="12" y="8" width="7" height="20" rx="2" />
+          <rect x="29" y="8" width="7" height="20" rx="2" />
+          <path d="M15.5 28v12M32.5 28v12M10 40h11M27 40h11M12 14h7M12 20h7M29 14h7M29 20h7" />
+        </symbol>
+        <symbol id="i-cvt" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="24" cy="24" r="17" />
+          <circle cx="24" cy="24" r="10" />
+          <circle cx="24" cy="24" r="3.5" />
+          <path d="M24 4v4M24 40v4M4 24h4M40 24h4M10 10l3 3M35 35l3 3M38 10l-3 3M13 35l-3 3" />
+        </symbol>
+        <symbol
+          id="i-gtf"
+          viewBox="0 0 48 48"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+        >
+          <circle cx="24" cy="24" r="18" />
+          <circle cx="24" cy="24" r="5" />
+          <path d="M24 19c-3-4-9-6-12-3M29 24c4-3 6-9 3-12M24 29c3 4 9 6 12 3M19 24c-4 3-6 9-3 12" />
+        </symbol>
+        <symbol
+          id="i-to"
+          viewBox="0 0 48 48"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linejoin="round"
+        >
+          <rect x="14" y="10" width="20" height="30" rx="6" />
+          <path d="M20 6h8v4h-8zM14 20h20M14 30h20" />
+          <path
+            d="M24 23.5c-1.5 2-2 2.8-2 3.5a2 2 0 0 0 4 0c0-.7-.5-1.5-2-3.5z"
+            fill="currentColor"
+            stroke="none"
+          />
+        </symbol>
+        <symbol
+          id="i-shield"
+          viewBox="0 0 48 48"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+        >
+          <path d="M24 5 8 11v11c0 10 7 18 16 21 9-3 16-11 16-21V11z" />
+          <path d="m17 24 5 5 9-10" />
+        </symbol>
+        <symbol
+          id="i-badge"
+          viewBox="0 0 48 48"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+        >
+          <path
+            d="M24 4 L27.2 7.92 L31.65 5.52 L33.11 10.36 L38.14 9.86 L37.64 14.89 L42.48 16.35 L40.08 20.8 L44 24 L40.08 27.2 L42.48 31.65 L37.64 33.11 L38.14 38.14 L33.11 37.64 L31.65 42.48 L27.2 40.08 L24 44 L20.8 40.08 L16.35 42.48 L14.89 37.64 L9.86 38.14 L10.36 33.11 L5.52 31.65 L7.92 27.2 L4 24 L7.92 20.8 L5.52 16.35 L10.36 14.89 L9.86 9.86 L14.89 10.36 L16.35 5.52 L20.8 7.92z"
+          />
+          <path d="m17 24 5 5 9-10" />
+        </symbol>
+        <symbol
+          id="i-master"
+          viewBox="0 0 48 48"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+        >
+          <circle cx="24" cy="15" r="8" />
+          <path d="M8 43c0-9 7-15 16-15s16 6 16 15" />
+        </symbol>
+        <symbol
+          id="i-wallet"
+          viewBox="0 0 48 48"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linejoin="round"
+        >
+          <path d="M8 14h30a3 3 0 0 1 3 3v21a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V13a4 4 0 0 1 4-4h24v5" />
+          <path d="M41 22h-8a4 4 0 0 0 0 8h8z" />
+          <circle cx="33.5" cy="26" r="1.2" fill="currentColor" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <header>
+      <div class="container nav">
+        <a href="#" class="logo">
+          <img src="img/logo.svg" alt="Интер-Авто АКПП" class="logo-img" />
+        </a>
+        <nav class="menu" id="menu">
+          <a href="#about">О нас</a>
+          <a href="#repair">Ремонт</a>
+          <a href="#reviews">Отзывы</a>
+          <a href="#contacts">Контакты</a>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 8px">
+          <div class="head-info">
+            <a class="head-phone" href="tel:+79228846610">+7 (922) 884-66-10</a>
+            <div class="head-meta">
+              <span
+                ><svg><use href="#i-pin" /></svg>Оренбург, ул. Черкасовой, 20/1</span
+              >
+              <span
+                ><svg><use href="#i-clock" /></svg>Пн–Пт 9:00–18:00</span
+              >
+            </div>
+          </div>
+          <a href="tel:+79228846610" class="btn btn-blue"
+            ><svg><use href="#i-phone" /></svg><span>Позвонить</span></a
+          >
+          <button class="burger" aria-label="Меню" aria-expanded="false" aria-controls="menu">
+            <svg
+              class="i-open"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+            <svg
+              class="i-close"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero" id="about">
+      <div class="hero-img" role="img" aria-label="Автомобиль на подъёмнике в сервисе"></div>
+      <div class="container">
+        <div class="hero-content">
+          <h1>Специалисты по АКПП, которым доверяют</h1>
+          <p>
+            Профессиональный ремонт АКПП, DSG и CVT с гарантией. Точная диагностика, качественный ремонт и
+            полный контроль каждого этапа.
+          </p>
+          <a href="tel:+79228846610" class="btn btn-orange"
+            ><svg><use href="#i-user" /></svg>Консультация специалиста</a
+          >
+          <br />
+          <iframe
+            class="rating-badge"
+            src="https://yandex.ru/sprav/widget/rating-badge/163892156474?type=rating"
+            width="150"
+            height="50"
+            frameborder="0"
+            title="Рейтинг на Яндексе"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="section spec">
+      <div class="container">
+        <h2 class="section-title">Специализируемся на ремонте АКПП</h2>
+        <div class="spec-grid">
+          <div>
+            <div class="spec-icon">
+              <img
+                src="img/spec-akpp.jpg"
+                alt="Автоматическая коробка передач в разрезе"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('is-loaded')"
+              />
+            </div>
+            <h3>АКПП</h3>
+            <p>Диагностика и ремонт автоматических коробок передач всех типов</p>
+          </div>
+          <div>
+            <div class="spec-icon">
+              <img
+                src="img/spec-dsg.jpg"
+                alt="Роботизированная коробка DSG"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('is-loaded')"
+              />
+            </div>
+            <h3>DSG</h3>
+            <p>Ремонт и адаптация роботизированных коробок DSG</p>
+          </div>
+          <div>
+            <div class="spec-icon">
+              <img
+                src="img/spec-cvt.jpg"
+                alt="Вариатор CVT"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('is-loaded')"
+              />
+            </div>
+            <h3>CVT</h3>
+            <p>Диагностика и восстановление вариаторов CVT</p>
+          </div>
+          <div>
+            <div class="spec-icon">
+              <img
+                src="img/spec-gtf.jpg"
+                alt="Гидротрансформатор"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('is-loaded')"
+              />
+            </div>
+            <h3>Гидро&shy;транс&shy;форма&shy;торы</h3>
+            <p>Ремонт и балансировка гидротрансформаторов</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section repair" id="repair">
+      <div class="container">
+        <h2 class="section-title">Ремонт</h2>
+        <div class="repair-grid">
+          <div class="repair-card">
+            <img
+              src="img/akpp.jpg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              onload="this.classList.add('is-loaded')"
+            />
+            <h3>Ремонт АКПП</h3>
+            <p>Капитальный ремонт U660 / U760 под ключ, гидроблок, соленоиды, мехатроника</p>
+          </div>
+          <div class="repair-card">
+            <img
+              src="img/dsg.jpg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              onload="this.classList.add('is-loaded')"
+            />
+            <h3>Ремонт DSG</h3>
+            <p>
+              DQ200 — восстановление/замена мехатроника, DQ250/DQ500 — замена датчиков давления, адаптация
+            </p>
+          </div>
+          <div class="repair-card">
+            <img
+              src="img/cvt.jpg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              onload="this.classList.add('is-loaded')"
+            />
+            <h3>Ремонт CVT</h3>
+            <p>Ремень, конуса, масло, электроника</p>
+          </div>
+          <div class="repair-card">
+            <img
+              src="img/gtf.jpg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              onload="this.classList.add('is-loaded')"
+            />
+            <h3 class="fit-word">Ремонт<br />гидротрансформаторов</h3>
+            <p>Диагностика, пайка, балансировка</p>
+          </div>
+          <div class="repair-card">
+            <img
+              src="img/to.jpg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              onload="this.classList.add('is-loaded')"
+            />
+            <h3>ТО</h3>
+            <p>Замена масла и фильтров, профилактика</p>
+          </div>
+        </div>
+        <div class="center">
+          <a href="tel:+79228846610" class="btn btn-orange"
+            ><svg><use href="#i-calendar" /></svg>Записаться на ремонт</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <section class="section why">
+      <div class="container">
+        <h2 class="section-title">
+          Почему выбирают <span style="white-space: nowrap">Интер-Авто АКПП</span>
+        </h2>
+        <div class="why-grid">
+          <div class="why-card">
+            <svg><use href="#i-shield" /></svg>
+            <h3>Гарантия</h3>
+            <p>Официальная гарантия на все виды работ</p>
+          </div>
+          <div class="why-card">
+            <svg><use href="#i-master" /></svg>
+            <h3>Опытные мастера</h3>
+            <p>Специалисты с опытом от 5 лет</p>
+          </div>
+          <div class="why-card">
+            <svg><use href="#i-badge" /></svg>
+            <h3>Оригинальные запчасти</h3>
+            <p>Только проверенные детали и расходники</p>
+          </div>
+          <div class="why-card">
+            <svg><use href="#i-wallet" /></svg>
+            <h3>Прозрачные цены</h3>
+            <p>Честная смета и без скрытых доплат</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reviews" id="reviews">
+      <div class="container">
+        <h2 class="section-title">Отзывы наших клиентов</h2>
+        <div class="reviews-grid">
+          <div class="review">
+            <div class="review-head">
+              <div class="avatar" style="background: #3a7d44">А</div>
+              <div>
+                <div class="review-name">Антон П.</div>
+                <div class="review-date">18 марта 2026</div>
+                <div class="stars">★★★★★</div>
+              </div>
+            </div>
+            <p>
+              Первый раз столкнулся с поломкой коробки передач, приехал на диагностику, все показали.
+              Договорились о цене снятия, разборки и деффектовки. Прслали фото и видео вскрытой коробки, решил
+              проехать лично. Всё показали и рассказали, оставил на ремонт. Через три дня машина уже готова.
+              Очень порадовала охраняемая парковка, видеонаблюдение, чистота в сервисе и собственный склад
+              запчастей. Ребята знают своё дело, однозначно рекомендую 👌
+            </p>
+            <div class="review-src">Отзыв на Яндекс Картах</div>
+          </div>
+          <div class="review">
+            <div class="review-head">
+              <div class="avatar" style="background: #6a4bc4">V</div>
+              <div>
+                <div class="review-name">Vlad</div>
+                <div class="review-date">15 ноября 2025</div>
+                <div class="stars">★★★★★</div>
+              </div>
+            </div>
+            <p>
+              Обратился с проблемой - вышел из стоя мехатроник. Занимался моей проблемой специалист по имени
+              Максим. Очень грамотный и ответственный человек!<br />Провел диагностику на стенде и определил
+              неисправность - плата управления. Гидравлическую часть проверил в разных режимах - всё в норме.
+              На всё мои вопросы Максим дал исчерпывающие ответы.<br />Управляющий сервисом, Александр,
+              подсказал варианты по дальнейшему ремонту.<br />Я очень доволен качеством оказанных мне услуг в
+              этом сервисе!
+            </p>
+            <div class="review-src">Отзыв на Яндекс Картах</div>
+          </div>
+          <div class="review">
+            <div class="review-head">
+              <div class="avatar" style="background: #c0474d">Ю</div>
+              <div>
+                <div class="review-name">Юрий М.</div>
+                <div class="review-date">23 февраля 2025</div>
+                <div class="stars">★★★★★</div>
+              </div>
+            </div>
+            <p>
+              Знаете, в этом сервисе работают молодцы мужики. Договорился приехать через 2 дня когда мне
+              удобно. Приехал. Машину загнал. И они сразу начали разбирать. Гидроблок заменили за час!
+            </p>
+            <div class="review-src">Отзыв на Яндекс Картах</div>
+          </div>
+        </div>
+        <div class="center">
+          <a
+            class="btn btn-outline"
+            href="https://yandex.ru/maps/org/inter_avto/163892156474/reviews/"
+            target="_blank"
+            rel="noopener"
+            >Читать все отзывы <svg><use href="#i-arrow" /></svg
+          ></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="contacts" id="contacts">
+      <div class="contacts-wrap">
+        <div class="contacts-info">
+          <h2>Контакты</h2>
+          <div class="contact-row">
+            <div class="contact-icon">
+              <svg><use href="#i-pin" /></svg>
+            </div>
+            <div><b>г. Оренбург, ул. Черкасовой, 20/1</b><span>мкр. Кушкуль</span></div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon">
+              <svg><use href="#i-clock" /></svg>
+            </div>
+            <div><b>Пн–Пт: 09:00 – 18:00</b><span>Сб, Вс — выходной</span></div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon">
+              <svg><use href="#i-phone" /></svg>
+            </div>
+            <div>
+              <b><a href="tel:+79228846610">+7 (922) 884-66-10</a></b
+              ><span>Звоните — ответим на вопросы</span>
+            </div>
+          </div>
+        </div>
+        <iframe
+          class="map"
+          title="Карта"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin allow-popups"
+          src="https://yandex.ru/map-widget/v1/?oid=163892156474&ol=biz&z=16"
+        ></iframe>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container footer-grid">
+        <div>
+          <a href="#" class="logo">
+            <img
+              src="img/logo.svg"
+              alt="Интер-Авто АКПП"
+              class="logo-img logo-img-lg"
+              loading="lazy"
+              decoding="async"
+              onload="this.classList.add('is-loaded')"
+            />
+          </a>
+          <p class="footer-about">
+            © 2026 Интер-Авто АКПП<br />Специализированный автотехцентр по ремонту АКПП, DSG и CVT в
+            Оренбурге.
+          </p>
+        </div>
+        <div>
+          <h4>Навигация</h4>
+          <ul>
+            <li><a href="#about">О нас</a></li>
+            <li><a href="#repair">Ремонт</a></li>
+            <li><a href="#reviews">Отзывы</a></li>
+            <li><a href="#contacts">Контакты</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Контакты</h4>
+          <ul>
+            <li class="f-contact">
+              <svg><use href="#i-phone" /></svg><a href="tel:+79228846610">+7 (922) 884-66-10</a>
+            </li>
+            <li class="f-contact">
+              <svg><use href="#i-clock" /></svg>Пн–Пт 09:00–18:00
+            </li>
+            <li class="f-contact">
+              <svg><use href="#i-pin" /></svg>г. Оренбург, ул. Черкасовой, 20/1
+            </li>
+          </ul>
+        </div>
+        <div class="footer-cta">
+          <a href="tel:+79228846610" class="btn btn-blue"
+            ><svg><use href="#i-phone" /></svg>Позвонить</a
+          >
+          <a href="https://max.ru/" class="btn btn-max" target="_blank" rel="noopener"
+            ><svg><use href="#i-chat" /></svg>Написать в Max</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <div class="mobile-bar">
+      <a href="tel:+79228846610" class="btn btn-blue"
+        ><svg><use href="#i-phone" /></svg>Позвонить</a
+      >
+      <a href="https://max.ru/" class="btn btn-max" target="_blank" rel="noopener"
+        ><svg><use href="#i-chat" /></svg>Max</a
+      >
+    </div>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>

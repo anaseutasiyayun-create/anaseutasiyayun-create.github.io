@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskBoard — канбан-доска на Node.js · Анастасия Кириченко</title>
+    <meta
+      name="description"
+      content="TaskBoard: REST API на Node.js и Express, фронтенд на чистом JavaScript с drag & drop, хранение в JSON или MySQL."
+    />
+    <style>
+      :root {
+        --bg: #fafafa;
+        --panel: #ffffff;
+        --ink: #0f0f12;
+        --ink-2: #5f6170;
+        --line: #e7e7ec;
+        --accent: #5b5bf7;
+        --accent-soft: #ececfe;
+        --code: #f2f2f6;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e0e12;
+          --panel: #17171d;
+          --ink: #f2f2f5;
+          --ink-2: #9a9cab;
+          --line: #2a2a33;
+          --accent: #8b8bff;
+          --accent-soft: #24244a;
+          --code: #1d1d25;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font:
+          16px/1.6 system-ui,
+          sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      a {
+        color: var(--accent);
+      }
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+      .wrap {
+        width: min(860px, 100% - 32px);
+        margin: 0 auto;
+        padding: 32px 0 60px;
+      }
+      .back {
+        display: inline-block;
+        padding: 8px 0;
+        color: var(--ink-2);
+        text-decoration: none;
+      }
+      .back:hover {
+        color: var(--ink);
+      }
+      .type {
+        display: inline-block;
+        margin-top: 24px;
+        font-size: 13px;
+        color: var(--accent);
+        background: var(--accent-soft);
+        padding: 3px 10px;
+        border-radius: 999px;
+      }
+      h1 {
+        font-size: clamp(30px, 5vw, 44px);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin: 14px 0 12px;
+      }
+      .lead {
+        font-size: 18px;
+        color: var(--ink-2);
+        margin: 0 0 28px;
+      }
+      .shot {
+        margin: 0 0 36px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        background: var(--line);
+      }
+      .shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      h2 {
+        font-size: 24px;
+        margin: 36px 0 14px;
+      }
+      ul {
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 6px;
+      }
+      .table {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      th {
+        color: var(--ink-2);
+        font-weight: 500;
+      }
+      code,
+      pre {
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 14px;
+      }
+      code {
+        background: var(--code);
+        padding: 2px 6px;
+        border-radius: 5px;
+      }
+      pre {
+        background: var(--code);
+        padding: 16px;
+        border-radius: 12px;
+        overflow-x: auto;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+      }
+      .demo-link {
+        display: inline-block;
+        padding: 12px 20px;
+        border-radius: 12px;
+        background: var(--accent);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        margin-right: 10px;
+      }
+      .demo-link:hover {
+        filter: brightness(1.1);
+      }
+      .note {
+        color: var(--ink-2);
+        font-size: 15px;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .tags span {
+        font-size: 13px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--line);
+        color: var(--ink-2);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <a class="back" href="../index.html">← Все проекты</a>
+      <span class="type">Преддипломная практика · фев–апр 2025</span>
+      <h1>TaskBoard — канбан-доска</h1>
+      <p class="lead">
+        REST API на Node.js + Express и одностраничный фронтенд на чистом JavaScript. Задачи можно
+        перетаскивать между колонками, данные хранятся в JSON-файле или MySQL.
+      </p>
+
+      <p>
+        <a class="demo-link" href="demo/index.html">Открыть демо-версию →</a>
+        <span class="note">Работает без сервера: API имитируется в браузере.</span>
+      </p>
+
+      <figure class="shot">
+        <img
+          src="../img/previews/taskboard-wide.webp?v=2"
+          alt="Интерфейс TaskBoard: шапка проекта, поиск, фильтры по приоритету и тегам, прогресс выполнения"
+          width="2508"
+          height="500"
+        />
+      </figure>
+
+      <h2>Возможности</h2>
+      <ul>
+        <li>Три колонки: «К выполнению», «В работе», «Готово»; лимит задач в работе с предупреждением</li>
+        <li>
+          Перетаскивание карточек (HTML5 Drag &amp; Drop) с оптимистичным обновлением и откатом при ошибке
+        </li>
+        <li>Плавный перенос карточек на новое место (FLIP-анимация, Web Animations API)</li>
+        <li>Создание, редактирование и удаление задач в модальном окне <code>&lt;dialog&gt;</code></li>
+        <li>Приоритеты, теги, исполнители, дедлайны с подсветкой «скоро» и «просрочено»</li>
+        <li>Фильтры по приоритету, тегу и исполнителю, поиск с debounce, прогресс выполнения</li>
+        <li>
+          Светлая и тёмная тема, работа с клавиатуры: <code>N</code>, <code>/</code>, <code>T</code>,
+          <code>←</code> <code>→</code>
+        </li>
+        <li>Два хранилища с одинаковым интерфейсом: JSON-файл или MySQL</li>
+        <li>Валидация на сервере и unit-тесты валидатора (<code>node --test</code>)</li>
+      </ul>
+
+      <h2>REST API</h2>
+      <div class="table">
+        <table>
+          <thead>
+            <tr>
+              <th>Метод</th>
+              <th>URL</th>
+              <th>Описание</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GET</td>
+              <td><code>/api/tasks</code></td>
+              <td>Список задач, фильтры <code>?status=todo&amp;tag=js&amp;q=...</code></td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td><code>/api/tasks/:id</code></td>
+              <td>Одна задача</td>
+            </tr>
+            <tr>
+              <td>POST</td>
+              <td><code>/api/tasks</code></td>
+              <td>Создать задачу</td>
+            </tr>
+            <tr>
+              <td>PATCH</td>
+              <td><code>/api/tasks/:id</code></td>
+              <td>Изменить часть полей</td>
+            </tr>
+            <tr>
+              <td>DELETE</td>
+              <td><code>/api/tasks/:id</code></td>
+              <td>Удалить задачу</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td><code>/api/stats</code></td>
+              <td>Количество задач по статусам</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Запуск</h2>
+      <p>Нужен Node.js 18+. Проект работает с сервером, поэтому открывается локально:</p>
+      <pre><code>npm install
+npm start      # http://localhost:3000
+npm test       # тесты валидации</code></pre>
+
+      <h2>Стек</h2>
+      <div class="tags">
+        <span>Node.js</span><span>Express</span><span>MySQL / mysql2</span><span>REST API</span
+        ><span>JavaScript ES6+</span><span>fetch, async/await</span><span>Drag &amp; Drop API</span
+        ><span>Web Animations API</span><span>CSS Grid</span>
+      </div>
+    </main>
+  </body>
+</html>
