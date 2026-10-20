@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Учебные проекты на JavaScript</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <a class="back" href="../index.html">← Все проекты</a>
+      <h1>Учебные проекты на JavaScript</h1>
+      <p class="lead">
+        ГАПОУ «ОКЭИ», 4 курс, сентябрь — декабрь 2024. Три небольших приложения на чистом JavaScript: каждое
+        отрабатывает свою тему.
+      </p>
+
+      <div class="grid">
+        <a class="card" href="todo/index.html">
+          <span class="card__num">01</span>
+          <h2>Список дел</h2>
+          <p>Добавление, редактирование, фильтры и сохранение в браузере.</p>
+          <div class="tags"><span>CRUD</span><span>делегирование событий</span><span>localStorage</span></div>
+          <div class="card__link">Открыть <span>→</span></div>
+        </a>
+        <a class="card" href="expenses/index.html">
+          <span class="card__num">02</span>
+          <h2>Учёт расходов</h2>
+          <p>Расходы по категориям, сводка за месяц и наглядная диаграмма.</p>
+          <div class="tags">
+            <span>формы и валидация</span><span>filter / reduce</span><span>localStorage</span>
+          </div>
+          <div class="card__link">Открыть <span>→</span></div>
+        </a>
+        <a class="card" href="calculator/index.html">
+          <span class="card__num">03</span>
+          <h2>Калькулятор</h2>
+          <p>Цепочки операций, ввод с клавиатуры и история вычислений.</p>
+          <div class="tags"><span>объект состояния</span><span>клавиатура</span><span>float</span></div>
+          <div class="card__link">Открыть <span>→</span></div>
+        </a>
+      </div>
+    </main>
+  </body>
+</html>

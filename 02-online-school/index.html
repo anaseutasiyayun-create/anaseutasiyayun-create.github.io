@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeStart — онлайн-школа программирования для подростков</title>
+    <meta
+      name="description"
+      content="Онлайн-курсы программирования для детей 10–17 лет: Python, веб-разработка, создание игр. Бесплатный пробный урок."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header__inner">
+        <a href="#" class="logo">code<span>start</span></a>
+        <nav class="nav" aria-label="Навигация">
+          <a href="#courses">Курсы</a>
+          <a href="#format">Как проходит обучение</a>
+          <a href="#teachers">Преподаватели</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <a href="#signup" class="btn btn--small">Пробный урок</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero__inner">
+          <div>
+            <span class="chip">Набор на октябрь открыт</span>
+            <h1>Ребёнок напишет первую игру <em>за 4 недели</em></h1>
+            <p class="lead">
+              Онлайн-школа программирования для подростков 10–17 лет. Живые уроки в мини-группах до 6 человек
+              и проект в портфолио по итогам каждого модуля.
+            </p>
+            <div class="hero__cta">
+              <a href="#signup" class="btn">Записаться на бесплатный урок</a>
+              <span class="hero__note">45 минут · без оплаты и обязательств</span>
+            </div>
+          </div>
+          <div class="hero__card" aria-hidden="true">
+            <div class="code">
+              <div class="code__bar"><i></i><i></i><i></i><span>game.py</span></div>
+              <pre id="typed"></pre>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <ul class="facts">
+            <li><b>2 400+</b> выпускников</li>
+            <li><b>4,9</b> средняя оценка уроков</li>
+            <li><b>6</b> учеников в группе</li>
+            <li><b>24</b> преподавателя-практика</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="courses">
+        <div class="container">
+          <h2>Выберите направление</h2>
+          <div class="age-filter" role="group" aria-label="Возраст">
+            <button class="is-active" data-age="all">Все возрасты</button>
+            <button data-age="10">10–12 лет</button>
+            <button data-age="13">13–17 лет</button>
+          </div>
+          <div class="courses">
+            <article class="course" data-ages="10 13" style="--accent: #7c5cff">
+              <span class="course__tag">Python</span>
+              <h3>Python с нуля</h3>
+              <p>Переменные, циклы, функции и первые консольные игры. Лучший старт для новичка.</p>
+              <ul>
+                <li>8 месяцев</li>
+                <li>2 урока в неделю</li>
+              </ul>
+              <div class="course__price"><b>4 900 ₽</b>/мес</div>
+            </article>
+            <article class="course" data-ages="13" style="--accent: #ff7a59">
+              <span class="course__tag">Web</span>
+              <h3>Создание сайтов</h3>
+              <p>HTML, CSS и JavaScript. Свой сайт-портфолио, опубликованный в интернете.</p>
+              <ul>
+                <li>9 месяцев</li>
+                <li>2 урока в неделю</li>
+              </ul>
+              <div class="course__price"><b>5 400 ₽</b>/мес</div>
+            </article>
+            <article class="course" data-ages="10" style="--accent: #22c55e">
+              <span class="course__tag">Scratch</span>
+              <h3>Игры в Scratch</h3>
+              <p>Визуальное программирование: логика, алгоритмы и мультфильмы без сложного синтаксиса.</p>
+              <ul>
+                <li>6 месяцев</li>
+                <li>1 урок в неделю</li>
+              </ul>
+              <div class="course__price"><b>3 600 ₽</b>/мес</div>
+            </article>
+            <article class="course" data-ages="13" style="--accent: #0ea5e9">
+              <span class="course__tag">Unity</span>
+              <h3>Разработка 3D-игр</h3>
+              <p>C# и Unity: физика, анимация и публикация собственной игры на itch.io.</p>
+              <ul>
+                <li>9 месяцев</li>
+                <li>2 урока в неделю</li>
+              </ul>
+              <div class="course__price"><b>5 900 ₽</b>/мес</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--tint" id="format">
+        <div class="container format">
+          <h2>Как проходит обучение</h2>
+          <div class="format__grid">
+            <div class="format__item">
+              <span>1</span>
+              <h3>Живой урок</h3>
+              <p>Преподаватель объясняет тему и сразу разбирает код вместе с группой в Zoom.</p>
+            </div>
+            <div class="format__item">
+              <span>2</span>
+              <h3>Практика</h3>
+              <p>Домашнее задание на платформе с автопроверкой и подсказками.</p>
+            </div>
+            <div class="format__item">
+              <span>3</span>
+              <h3>Код-ревью</h3>
+              <p>Ментор оставляет комментарии к решению в течение 24 часов.</p>
+            </div>
+            <div class="format__item">
+              <span>4</span>
+              <h3>Проект</h3>
+              <p>В конце модуля — защита проекта перед группой и родителями.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="teachers">
+        <div class="container">
+          <div class="section__head">
+            <h2>Преподаватели и отзывы</h2>
+            <div class="slider-nav">
+              <button class="slider-nav__btn" data-slide="prev" aria-label="Назад">‹</button>
+              <button class="slider-nav__btn" data-slide="next" aria-label="Вперёд">›</button>
+            </div>
+          </div>
+          <div class="slider" id="slider" aria-roledescription="карусель">
+            <div class="slider__track">
+              <figure class="slide">
+                <div class="avatar" style="--h: 260">ЕМ</div>
+                <blockquote>
+                  «Сын сам садится за домашку — раньше такого не было ни с одним кружком».
+                </blockquote>
+                <figcaption><b>Елена М.</b> мама ученика, курс Python</figcaption>
+              </figure>
+              <figure class="slide">
+                <div class="avatar" style="--h: 20">ДК</div>
+                <blockquote>
+                  «Сделал сайт для своей футбольной команды, тренер теперь выкладывает туда расписание».
+                </blockquote>
+                <figcaption><b>Дима К., 14 лет</b> курс «Создание сайтов»</figcaption>
+              </figure>
+              <figure class="slide">
+                <div class="avatar" style="--h: 140">АС</div>
+                <blockquote>
+                  «Объясняю через игры: сначала ребёнок видит результат, потом разбираемся, почему это
+                  работает».
+                </blockquote>
+                <figcaption><b>Артём С.</b> преподаватель Python, 6 лет опыта</figcaption>
+              </figure>
+              <figure class="slide">
+                <div class="avatar" style="--h: 200">ВЛ</div>
+                <blockquote>
+                  «Группы маленькие, преподаватель знает сильные стороны каждого ребёнка».
+                </blockquote>
+                <figcaption><b>Виктория Л.</b> мама ученицы, курс Scratch</figcaption>
+              </figure>
+              <figure class="slide">
+                <div class="avatar" style="--h: 320">МН</div>
+                <blockquote>«Моя игра на Unity набрала 300 скачиваний. Хочу дальше в геймдев».</blockquote>
+                <figcaption><b>Маша Н., 16 лет</b> курс «Разработка 3D-игр»</figcaption>
+              </figure>
+            </div>
+          </div>
+          <div class="slider-dots" id="sliderDots"></div>
+        </div>
+      </section>
+
+      <section class="section section--tint" id="faq">
+        <div class="container container--narrow">
+          <h2>Частые вопросы</h2>
+          <div class="acc" id="accordion">
+            <div class="acc__item">
+              <button class="acc__head" aria-expanded="false">Нужен ли опыт программирования?</button>
+              <div class="acc__body">
+                <p>Нет. На пробном уроке преподаватель определит уровень и подберёт группу.</p>
+              </div>
+            </div>
+            <div class="acc__item">
+              <button class="acc__head" aria-expanded="false">Какой компьютер нужен?</button>
+              <div class="acc__body">
+                <p>
+                  Любой ноутбук или ПК с Windows, macOS или Linux, микрофон и стабильный интернет от 10
+                  Мбит/с. Планшета недостаточно.
+                </p>
+              </div>
+            </div>
+            <div class="acc__item">
+              <button class="acc__head" aria-expanded="false">Что если ребёнок пропустит урок?</button>
+              <div class="acc__body">
+                <p>
+                  Все уроки записываются. Пропуск можно отработать на индивидуальной консультации с ментором.
+                </p>
+              </div>
+            </div>
+            <div class="acc__item">
+              <button class="acc__head" aria-expanded="false">Можно ли вернуть деньги?</button>
+              <div class="acc__body">
+                <p>Да, за непройденные занятия вернём деньги в течение 10 рабочих дней по заявлению.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section signup" id="signup">
+        <div class="container signup__inner">
+          <div class="signup__text">
+            <h2>Запишитесь на бесплатный пробный урок</h2>
+            <p>
+              Познакомимся, определим уровень и вместе с ребёнком напишем небольшую программу. После урока
+              дадим рекомендации по курсу.
+            </p>
+            <div class="timer" aria-live="polite">До конца набора в группу: <b id="countdown">—</b></div>
+          </div>
+          <form class="form" id="form" novalidate>
+            <div class="field">
+              <label for="parent">Имя родителя</label>
+              <input id="parent" name="parent" type="text" autocomplete="name" />
+              <span class="field__error"></span>
+            </div>
+            <div class="field">
+              <label for="phone">Телефон</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+7 900 000-00-00" />
+              <span class="field__error"></span>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="name@mail.ru" />
+              <span class="field__error"></span>
+            </div>
+            <div class="field field--row">
+              <div>
+                <label for="age">Возраст ребёнка</label>
+                <input id="age" name="age" type="number" min="10" max="17" inputmode="numeric" />
+                <span class="field__error"></span>
+              </div>
+              <div>
+                <label for="course">Курс</label>
+                <select id="course" name="course">
+                  <option value="">Пока не знаю</option>
+                  <option>Python с нуля</option>
+                  <option>Создание сайтов</option>
+                  <option>Игры в Scratch</option>
+                  <option>Разработка 3D-игр</option>
+                </select>
+              </div>
+            </div>
+            <label class="agree"
+              ><input type="checkbox" name="agree" /> Соглашаюсь с
+              <a href="#" onclick="return false;">политикой конфиденциальности</a></label
+            >
+            <span class="field__error" id="agreeError"></span>
+            <button class="btn btn--wide" type="submit">Записаться</button>
+            <p class="form__status" id="formStatus" role="status"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">© CodeStart, 2025 · Демо-проект. Вёрстка и разработка — Анастасия Кириченко</div>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>

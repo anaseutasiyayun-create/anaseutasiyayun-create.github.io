@@ -1,0 +1,3527 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Family Dance — демо-версия</title>
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <style>
+      :root {
+        --bg: #080808;
+        --bg-2: #0f0f0f;
+        --card: #141414;
+        --card-2: #1c1c1c;
+        --fg: #f4f4f4;
+        --fg-2: #8f8f8f;
+        --border: rgba(255, 255, 255, 0.08);
+        --pink: #ff2d8a;
+        --orange: #ff7a18;
+        --lime: #a4ff39;
+        --grad: linear-gradient(100deg, var(--pink), var(--orange));
+        --ink: #0a0a0a;
+        --ink-2: #6b6b6b;
+        --line: #e4e4e4;
+        --tint: #f1f1f1;
+        --dark: #0a0a0a;
+        --ok: #1a7f37;
+        --err: #e5484d;
+        --r: 22px;
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --font:
+          -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Inter, Roboto, Arial, sans-serif;
+        --font-script: 'Caveat', 'Segoe Print', cursive;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 80px;
+      }
+      body {
+        margin: 0;
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      body.is-loading {
+        overflow: hidden;
+      }
+      ::selection {
+        background: var(--pink);
+        color: #fff;
+      }
+      a {
+        color: inherit;
+      }
+      img,
+      video {
+        display: block;
+        max-width: 100%;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .container {
+        width: min(1240px, 100% - 40px);
+        margin: 0 auto;
+      }
+      :focus-visible {
+        outline: 2px solid var(--pink);
+        outline-offset: 3px;
+      }
+      .hl-script {
+        font-family: var(--font-script);
+        font-weight: 700;
+        color: var(--pink);
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 1.15em;
+        line-height: 0.8;
+        display: inline-block;
+        transform: rotate(-4deg);
+      }
+      .eyebrow {
+        font-size: 13px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--fg-2);
+        margin: 0 0 18px;
+      }
+
+      .btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 18px 30px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--pink);
+        color: #fff;
+        font-weight: 800;
+        font-size: 15px;
+        text-decoration: none;
+        cursor: pointer;
+        overflow: hidden;
+        isolation: isolate;
+        box-shadow: 0 12px 40px -12px rgba(255, 45, 138, 0.7);
+        transition:
+          transform 0.4s var(--ease),
+          box-shadow 0.3s;
+      }
+      .btn::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--orange);
+        border-radius: inherit;
+        transform: translateY(101%);
+        transition: transform 0.45s var(--ease);
+      }
+      .btn:hover::before {
+        transform: none;
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+      .btn--ghost {
+        background: transparent;
+        box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.25);
+      }
+      .btn--ghost::before {
+        background: var(--fg);
+      }
+      .btn--ghost:hover {
+        color: var(--bg);
+      }
+      .btn--light {
+        background: var(--fg);
+        color: var(--bg);
+        box-shadow: none;
+      }
+      .btn--light::before {
+        background: var(--pink);
+      }
+      .btn--light:hover {
+        color: #fff;
+      }
+      .btn--sm {
+        padding: 11px 20px;
+        font-size: 14px;
+      }
+      .btn--block {
+        width: 100%;
+        justify-content: center;
+      }
+      .btn--danger {
+        background: var(--err);
+        box-shadow: none;
+      }
+
+      .preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: var(--bg);
+        display: grid;
+        place-content: center;
+        gap: 28px;
+        justify-items: center;
+        transition: clip-path 1s var(--ease) 0.1s;
+        clip-path: inset(0 0 0 0);
+      }
+      body.is-ready .preloader {
+        clip-path: inset(0 0 100% 0);
+        pointer-events: none;
+      }
+      .preloader__word {
+        display: flex;
+        font-weight: 900;
+        font-size: clamp(36px, 8vw, 96px);
+        letter-spacing: -0.04em;
+        overflow: hidden;
+      }
+      .preloader__word span {
+        display: inline-block;
+        transform: translateY(110%);
+        animation: preIn 0.8s var(--ease) forwards;
+        animation-delay: calc(var(--i) * 45ms);
+      }
+      .preloader__word span:nth-child(n + 8) {
+        color: var(--pink);
+      }
+      @keyframes preIn {
+        to {
+          transform: none;
+        }
+      }
+      .preloader__bar {
+        width: min(260px, 60vw);
+        height: 2px;
+        background: var(--border);
+        overflow: hidden;
+      }
+      .preloader__bar i {
+        display: block;
+        height: 100%;
+        background: var(--grad);
+        transform-origin: left;
+        transform: scaleX(0);
+        transition: transform 0.3s;
+      }
+      html:not(.js) .preloader {
+        display: none;
+      }
+
+      .cursor {
+        display: none;
+      }
+      .has-cursor,
+      .has-cursor * {
+        cursor: none !important;
+      }
+      .has-cursor .cursor {
+        display: grid;
+        place-items: center;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 300;
+        width: 14px;
+        height: 14px;
+        margin: -7px 0 0 -7px;
+        border-radius: 50%;
+        background: #fff;
+        mix-blend-mode: difference;
+        pointer-events: none;
+        transition:
+          width 0.35s var(--ease),
+          height 0.35s var(--ease),
+          margin 0.35s var(--ease),
+          opacity 0.2s;
+      }
+      .cursor.is-hover {
+        width: 56px;
+        height: 56px;
+        margin: -28px 0 0 -28px;
+      }
+      .cursor.is-label {
+        width: 96px;
+        height: 96px;
+        margin: -48px 0 0 -48px;
+        mix-blend-mode: normal;
+        background: var(--pink);
+      }
+      .cursor.is-down {
+        width: 10px;
+        height: 10px;
+        margin: -5px 0 0 -5px;
+      }
+      .cursor.is-gone {
+        opacity: 0;
+      }
+      .cursor__label {
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #fff;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .cursor.is-label .cursor__label {
+        opacity: 1;
+      }
+      .cursor.is-label.is-invert {
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      }
+      .cursor.is-invert .cursor__label {
+        color: var(--pink);
+      }
+
+      .ph {
+        position: relative;
+        background:
+          var(--img) center / cover no-repeat,
+          var(--card);
+        overflow: hidden;
+      }
+      .ph__label {
+        display: none;
+      }
+      .ph.ph--empty {
+        background:
+          radial-gradient(circle at 20% 15%, rgba(255, 45, 138, 0.55), transparent 55%),
+          radial-gradient(circle at 85% 85%, rgba(255, 122, 24, 0.45), transparent 55%),
+          repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 12px), #121212;
+      }
+      .ph.ph--empty .ph__label {
+        display: grid;
+        place-items: center;
+        position: absolute;
+        inset: 0;
+        font-family: var(--font-script);
+        font-size: clamp(26px, 3vw, 44px);
+        text-align: center;
+        padding: 10px;
+        line-height: 1;
+        transform: rotate(-5deg);
+      }
+
+      .header {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 60;
+        transition:
+          transform 0.5s var(--ease),
+          background 0.3s,
+          backdrop-filter 0.3s;
+      }
+      .header.is-scrolled {
+        background: rgba(8, 8, 8, 0.7);
+        backdrop-filter: blur(14px);
+      }
+      .header.is-hidden {
+        transform: translateY(-100%);
+      }
+      .header__row {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        height: 76px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .logo__img {
+        display: block;
+        width: auto;
+        height: 56px;
+        transition: transform 0.5s var(--ease);
+      }
+      .logo:hover .logo__img {
+        transform: rotate(-6deg) scale(1.06);
+      }
+      .nav {
+        display: flex;
+        gap: 6px;
+        margin-left: auto;
+      }
+      .nav a {
+        position: relative;
+        padding: 8px 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--fg-2);
+        transition: color 0.25s;
+      }
+      .nav a::after {
+        content: '';
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 4px;
+        height: 2px;
+        background: var(--pink);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s var(--ease);
+      }
+      .nav a:hover {
+        color: var(--fg);
+      }
+      .nav a:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+      .burger {
+        display: none;
+        width: 44px;
+        height: 44px;
+        border: 0;
+        background: none;
+        position: relative;
+      }
+      .burger span,
+      .burger::before,
+      .burger::after {
+        content: '';
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        height: 2px;
+        background: var(--fg);
+        transition:
+          transform 0.35s var(--ease),
+          opacity 0.2s;
+      }
+      .burger span {
+        top: 21px;
+      }
+      .burger::before {
+        top: 14px;
+      }
+      .burger::after {
+        top: 28px;
+      }
+      .burger.is-open span {
+        opacity: 0;
+      }
+      .burger.is-open::before {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .burger.is-open::after {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      .hero {
+        position: relative;
+        min-height: 100svh;
+        display: flex;
+        align-items: flex-end;
+        padding: 120px 0 64px;
+        overflow: hidden;
+        --mx: 70%;
+        --my: 30%;
+        --tx: 0;
+        --ty: 0;
+      }
+      .hero__media {
+        position: absolute;
+        inset: -5% 0 0;
+        z-index: 0;
+        will-change: transform;
+      }
+      .hero__media img,
+      .hero__media video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(0.25) contrast(1.1) brightness(0.55);
+      }
+      .hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(180deg, rgba(8, 8, 8, 0.3) 0%, rgba(8, 8, 8, 0.1) 40%, var(--bg) 100%);
+        pointer-events: none;
+      }
+      .hero__blobs {
+        position: absolute;
+        inset: 0;
+      }
+      .hero__blobs i {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.7;
+        mix-blend-mode: screen;
+        animation: blob 14s ease-in-out infinite alternate;
+      }
+      .hero__blobs i:nth-child(1) {
+        width: 52vw;
+        height: 52vw;
+        background: var(--pink);
+        left: 45%;
+        top: -18%;
+      }
+      .hero__blobs i:nth-child(2) {
+        width: 38vw;
+        height: 38vw;
+        background: var(--orange);
+        left: 65%;
+        top: 35%;
+        animation-delay: -5s;
+        animation-duration: 17s;
+      }
+      .hero__blobs i:nth-child(3) {
+        width: 30vw;
+        height: 30vw;
+        background: #7a2cff;
+        left: 10%;
+        top: 40%;
+        opacity: 0.45;
+        animation-delay: -9s;
+      }
+      @keyframes blob {
+        33% {
+          transform: translate(-8vw, 6vh) scale(1.15);
+        }
+        66% {
+          transform: translate(5vw, -4vh) scale(0.9);
+        }
+        100% {
+          transform: translate(-3vw, 8vh) scale(1.05);
+        }
+      }
+      .hero__grain {
+        position: absolute;
+        inset: -50%;
+        z-index: 2;
+        opacity: 0.12;
+        pointer-events: none;
+        animation: grain 1s steps(6) infinite;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      @keyframes grain {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        20% {
+          transform: translate(-5%, 4%);
+        }
+        40% {
+          transform: translate(3%, -6%);
+        }
+        60% {
+          transform: translate(-4%, 2%);
+        }
+        80% {
+          transform: translate(6%, 5%);
+        }
+      }
+      .hero__spot {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background: radial-gradient(
+          600px circle at var(--mx) var(--my),
+          rgba(255, 45, 138, 0.18),
+          transparent 60%
+        );
+      }
+      .hero__inner {
+        position: relative;
+        z-index: 3;
+        width: min(1240px, 100% - 40px);
+      }
+      .hero__kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 18px;
+        padding: 8px 16px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(20, 20, 20, 0.6);
+        backdrop-filter: blur(8px);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--fg-2);
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.8s var(--ease) 0.9s,
+          transform 0.8s var(--ease) 0.9s;
+      }
+      .hero__kicker .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--lime);
+        box-shadow: 0 0 0 0 rgba(164, 255, 57, 0.6);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        70% {
+          box-shadow: 0 0 0 10px rgba(164, 255, 57, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(164, 255, 57, 0);
+        }
+      }
+      .hero__title {
+        margin: 0;
+        font-weight: 900;
+        font-size: clamp(64px, 15.5vw, 230px);
+        line-height: 0.82;
+        letter-spacing: -0.055em;
+        text-transform: uppercase;
+        transform: translate(calc(var(--tx) * -14px), calc(var(--ty) * -10px));
+        transition: transform 0.6s var(--ease);
+      }
+      .hero__title .line {
+        display: block;
+        overflow: hidden;
+        padding: 0.02em 0 0.06em;
+        position: relative;
+      }
+      .hero__title .line:first-child {
+        padding-top: 0.16em;
+        margin-top: -0.14em;
+      }
+      .hero__title .ch {
+        display: inline-block;
+        transform: translateY(105%) rotate(8deg);
+        transition: transform 1.1s var(--ease);
+        transition-delay: calc(0.35s + var(--i) * 55ms);
+      }
+      .line--outline .ch {
+        padding-right: 0.1em;
+        margin-right: -0.1em;
+        background: linear-gradient(100deg, var(--pink), var(--orange), var(--pink));
+        background-size: 700% 100%;
+        background-position: calc(var(--i) * 18%) 0;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: shine 6s linear infinite;
+      }
+      @keyframes shine {
+        to {
+          background-position: calc(var(--i) * 18% + 140%) 0;
+        }
+      }
+      .hero__script {
+        position: absolute;
+        right: 2%;
+        bottom: 8%;
+        font-family: var(--font-script);
+        font-weight: 700;
+        font-size: clamp(30px, 4.2vw, 64px);
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--fg);
+        transform: rotate(-8deg) scale(0.6);
+        opacity: 0;
+        transition:
+          transform 1s var(--ease) 1.2s,
+          opacity 0.6s 1.2s;
+      }
+      .hero__bottom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 28px;
+        margin-top: 36px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 1s var(--ease) 1.1s,
+          transform 1s var(--ease) 1.1s;
+      }
+      .hero__text {
+        max-width: 460px;
+        margin: 0;
+        color: var(--fg-2);
+        font-size: 18px;
+      }
+      .hero__btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      body.is-ready .hero__title .ch {
+        transform: none;
+      }
+      body.is-ready .hero__kicker,
+      body.is-ready .hero__bottom {
+        opacity: 1;
+        transform: none;
+      }
+      body.is-ready .hero__script {
+        opacity: 1;
+        transform: rotate(-8deg);
+      }
+      html:not(.js) .hero__title .ch,
+      html:not(.js) .hero__kicker,
+      html:not(.js) .hero__bottom,
+      html:not(.js) .hero__script {
+        opacity: 1;
+        transform: none;
+      }
+
+      .badge-spin {
+        position: absolute;
+        z-index: 4;
+        right: max(20px, calc((100vw - 1240px) / 2));
+        top: max(20vh, 190px);
+        width: 150px;
+        height: 150px;
+        border: 0;
+        padding: 0;
+        border-radius: 50%;
+        background: rgba(8, 8, 8, 0.4);
+        backdrop-filter: blur(6px);
+        color: var(--fg);
+        transition:
+          transform 0.4s var(--ease),
+          background 0.3s;
+      }
+      .badge-spin svg {
+        width: 100%;
+        height: 100%;
+        animation: spin 14s linear infinite;
+      }
+      .badge-spin text {
+        font-size: 14px;
+        font-weight: 800;
+        fill: currentColor;
+      }
+      .badge-spin__arrow {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-size: 40px;
+        transition: transform 0.4s var(--ease);
+      }
+      .badge-spin:hover {
+        background: var(--pink);
+      }
+      .badge-spin:hover .badge-spin__arrow {
+        transform: rotate(45deg);
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .hero__scroll {
+        position: absolute;
+        z-index: 4;
+        left: 50%;
+        bottom: 22px;
+        width: 26px;
+        height: 42px;
+        margin-left: -13px;
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        border-radius: 13px;
+      }
+      .hero__scroll span {
+        position: absolute;
+        left: 50%;
+        top: 8px;
+        width: 4px;
+        height: 8px;
+        margin-left: -2px;
+        border-radius: 2px;
+        background: var(--fg);
+        animation: scrollDot 1.8s var(--ease) infinite;
+      }
+      @keyframes scrollDot {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(16px);
+          opacity: 0;
+        }
+      }
+
+      .ribbons {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+        margin: -20px 0;
+      }
+      .ribbon {
+        position: absolute;
+        left: -5%;
+        right: -5%;
+        top: 50%;
+        padding: 18px 0;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .ribbon--pink {
+        background: var(--pink);
+        transform: translateY(-50%) rotate(-4deg);
+        z-index: 2;
+        box-shadow: 0 20px 60px -20px rgba(255, 45, 138, 0.6);
+      }
+      .ribbon--light {
+        background: var(--fg);
+        color: var(--bg);
+        transform: translateY(-50%) rotate(3deg);
+      }
+      .ribbon__track {
+        display: inline-flex;
+        align-items: center;
+        gap: 28px;
+        animation: marquee 30s linear infinite;
+      }
+      .ribbon__track--reverse {
+        animation-direction: reverse;
+        animation-duration: 40s;
+      }
+      .ribbon span {
+        font-weight: 900;
+        font-size: clamp(22px, 3vw, 38px);
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+      }
+      .ribbon--pink span:nth-of-type(odd) {
+        font-family: var(--font-script);
+        text-transform: none;
+        font-size: clamp(30px, 4vw, 50px);
+        letter-spacing: 0;
+      }
+      .ribbon b {
+        font-size: 22px;
+      }
+      @keyframes marquee {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      .section {
+        position: relative;
+        padding: 130px 0;
+      }
+      .title {
+        margin: 0 0 48px;
+        font-weight: 900;
+        font-size: clamp(48px, 9vw, 140px);
+        line-height: 0.88;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+        hyphens: manual;
+      }
+      .sec-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px 40px;
+        margin-bottom: 48px;
+      }
+      .sec-head .title {
+        margin: 0;
+      }
+
+      .js [data-reveal] {
+        opacity: 0;
+        transform: translateY(50px);
+        transition:
+          opacity 1s var(--ease),
+          transform 1s var(--ease);
+        transition-delay: var(--d, 0s);
+      }
+      .js [data-reveal].is-in {
+        opacity: 1;
+        transform: none;
+      }
+
+      .manifesto__text {
+        margin: 0 0 90px;
+        font-weight: 800;
+        font-size: clamp(28px, 4.6vw, 64px);
+        line-height: 1.12;
+        letter-spacing: -0.035em;
+      }
+      .manifesto__text .w {
+        color: #2a2a2a;
+        transition: color 0.4s;
+      }
+      .manifesto__text .w.is-lit {
+        color: var(--fg);
+      }
+      .manifesto__text .w.is-lit:nth-child(8),
+      .manifesto__text .w.is-lit:nth-child(9),
+      .manifesto__text .w.is-lit:nth-child(10) {
+        color: var(--pink);
+      }
+      html:not(.js) .manifesto__text .w {
+        color: var(--fg);
+      }
+      .manifesto__row {
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 40px;
+        align-items: stretch;
+      }
+      .manifesto__photo {
+        border-radius: var(--r);
+        min-height: 460px;
+        background-position: 50% 32%;
+      }
+      .stats {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .stats li {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 30px;
+        padding: 26px;
+        border-radius: var(--r);
+        background: var(--card);
+        border: 1px solid var(--border);
+      }
+      .stats b {
+        font-weight: 900;
+        font-size: clamp(44px, 5vw, 72px);
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+      .stats li:nth-child(1) b {
+        background: var(--grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .stats span {
+        color: var(--fg-2);
+        font-size: 15px;
+      }
+
+      .more {
+        margin-top: 100px;
+      }
+      .more__title {
+        margin: 0 0 30px;
+        font-weight: 900;
+        font-size: clamp(30px, 4vw, 54px);
+        letter-spacing: -0.04em;
+        line-height: 1;
+      }
+      .more__grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+      .more__item {
+        position: relative;
+        overflow: hidden;
+        padding: 28px 24px 30px;
+        border-radius: var(--r);
+        background: var(--card);
+        border: 1px solid var(--border);
+        transition:
+          transform 0.5s var(--ease),
+          border-color 0.3s;
+        --gx: 50%;
+        --gy: 50%;
+      }
+      .more__item::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          300px circle at var(--gx) var(--gy),
+          rgba(255, 45, 138, 0.25),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .more__item:hover {
+        border-color: rgba(255, 45, 138, 0.4);
+      }
+      .more__item:hover::before {
+        opacity: 1;
+      }
+      .more__item span {
+        position: relative;
+        font-family: var(--font-script);
+        font-size: 34px;
+        color: var(--pink);
+      }
+      .more__item b {
+        position: relative;
+        display: block;
+        margin: 50px 0 8px;
+        font-size: 22px;
+        letter-spacing: -0.02em;
+      }
+      .more__item p {
+        position: relative;
+        margin: 0;
+        color: var(--fg-2);
+        font-size: 15px;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        padding: 11px 20px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--fg-2);
+        font-weight: 700;
+        transition:
+          background 0.3s,
+          color 0.3s,
+          border-color 0.3s;
+      }
+      .chip:hover {
+        color: var(--fg);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+      .chip.is-active {
+        background: var(--fg);
+        color: var(--bg);
+        border-color: var(--fg);
+      }
+      .dir-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid var(--border);
+      }
+      .dir {
+        border-bottom: 1px solid var(--border);
+      }
+      .dir__row {
+        position: relative;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 70px 1fr auto 60px;
+        align-items: center;
+        gap: 20px;
+        padding: 28px 8px;
+        border: 0;
+        background: none;
+        text-align: left;
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .dir__row::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--pink);
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 0.6s var(--ease);
+      }
+      .dir__row:hover::before,
+      .dir__row:focus-visible::before {
+        transform: scaleY(1);
+        transform-origin: top;
+      }
+      .dir__num {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--fg-2);
+        transition: color 0.3s;
+      }
+      .dir__thumb {
+        display: none;
+      }
+      .dir__name {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        font-weight: 900;
+        font-size: clamp(32px, 5.5vw, 80px);
+        line-height: 0.95;
+        letter-spacing: -0.045em;
+        text-transform: uppercase;
+        padding-bottom: 0.04em;
+      }
+      .dir__name-a,
+      .dir__name-b {
+        display: block;
+        transition: transform 0.6s var(--ease);
+      }
+      .dir__name-b {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        font-family: var(--font-script);
+        text-transform: none;
+        letter-spacing: 0;
+        transform: translateY(105%);
+      }
+      .dir__row:hover .dir__name-a {
+        transform: translateY(-105%);
+      }
+      .dir__row:hover .dir__name-b {
+        transform: none;
+      }
+      .dir__ages {
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        font-weight: 800;
+        font-size: 14px;
+        white-space: nowrap;
+        transition:
+          background 0.3s,
+          color 0.3s,
+          border-color 0.3s;
+      }
+      .dir__arrow {
+        justify-self: end;
+        font-size: 34px;
+        transition: transform 0.5s var(--ease);
+      }
+      .dir__row:hover .dir__num {
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .dir__row:hover .dir__ages {
+        background: #fff;
+        color: var(--pink);
+        border-color: #fff;
+      }
+      .dir__row:hover .dir__arrow {
+        transform: rotate(45deg);
+      }
+
+      .hscroll {
+        position: relative;
+        padding: 60px 0;
+      }
+      .hscroll__sticky {
+        overflow: hidden;
+      }
+      .hscroll.is-pinned {
+        padding: 0;
+      }
+      .hscroll.is-pinned .hscroll__sticky {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .hscroll__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 10px 40px;
+        margin-bottom: 40px;
+      }
+      .hscroll__head .title {
+        margin: 0;
+      }
+      .hscroll__head p {
+        margin: 0;
+        color: var(--fg-2);
+        max-width: 300px;
+      }
+      .hscroll__track {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 0 max(20px, calc((100vw - 1240px) / 2));
+        will-change: transform;
+      }
+      .hscroll:not(.is-pinned) .hscroll__track {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 16px;
+        scrollbar-width: none;
+      }
+      .hscroll:not(.is-pinned) .hscroll__track > * {
+        scroll-snap-align: center;
+      }
+      .shot {
+        flex: none;
+        margin: 0;
+        width: clamp(240px, 26vw, 380px);
+      }
+      .shot__img {
+        aspect-ratio: 3 / 4;
+        border-radius: var(--r);
+        transition: transform 0.6s var(--ease);
+      }
+      .shot:hover .shot__img {
+        transform: scale(0.97) rotate(-1deg);
+      }
+      .shot--1 {
+        transform: translateY(-30px);
+      }
+      .shot--2 {
+        width: clamp(260px, 32vw, 460px);
+      }
+      .shot--2 .shot__img {
+        aspect-ratio: 4 / 3;
+      }
+      .shot--0 {
+        transform: translateY(40px);
+      }
+      .shot figcaption {
+        display: flex;
+        gap: 12px;
+        margin-top: 14px;
+        font-weight: 700;
+      }
+      .shot figcaption span {
+        color: var(--pink);
+        font-family: var(--font-script);
+        font-size: 22px;
+        line-height: 1.1;
+      }
+      .shot--cta {
+        width: clamp(260px, 28vw, 380px);
+        aspect-ratio: 3 / 4;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 24px;
+        padding: 34px;
+        border-radius: var(--r);
+        border: 1.5px dashed rgba(255, 255, 255, 0.25);
+      }
+      .shot--cta p {
+        margin: 0;
+        font-weight: 900;
+        font-size: clamp(28px, 3vw, 42px);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
+
+      .reviews-sec {
+        overflow: hidden;
+      }
+      .reviews-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 56px;
+      }
+      .reviews-head .title {
+        margin: 0;
+      }
+      .ratings {
+        display: flex;
+        gap: 12px;
+      }
+      .rating {
+        display: grid;
+        padding: 18px 24px;
+        border-radius: 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        text-decoration: none;
+        transition:
+          border-color 0.3s,
+          transform 0.4s var(--ease);
+      }
+      a.rating:hover {
+        border-color: var(--pink);
+        transform: translateY(-3px);
+      }
+      .rating b {
+        font-weight: 900;
+        font-size: 44px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+      }
+      .rating span {
+        color: var(--orange);
+        letter-spacing: 2px;
+      }
+      .rating small {
+        color: var(--fg-2);
+      }
+      .marquee {
+        overflow: hidden;
+        padding: 10px 0;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+      }
+      .marquee__track {
+        display: flex;
+        gap: 18px;
+        width: max-content;
+        animation: marquee 70s linear infinite;
+      }
+      .marquee--reverse .marquee__track {
+        animation-direction: reverse;
+        animation-duration: 80s;
+      }
+      .marquee:hover .marquee__track {
+        animation-play-state: paused;
+      }
+      .review {
+        flex: none;
+        width: 420px;
+        margin: 0;
+        padding: 30px;
+        border-radius: var(--r);
+        background: var(--card);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        transition:
+          border-color 0.3s,
+          transform 0.4s var(--ease);
+      }
+      .review:hover {
+        border-color: rgba(255, 45, 138, 0.5);
+        transform: rotate(-1deg) scale(1.02);
+      }
+      .review__quote {
+        font-family: Georgia, serif;
+        font-size: 80px;
+        line-height: 0.6;
+        height: 34px;
+        background: var(--grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .review blockquote {
+        flex: 1;
+        margin: 0 0 24px;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.5;
+      }
+      .review figcaption {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .review figcaption b {
+        display: block;
+      }
+      .review figcaption small {
+        color: var(--fg-2);
+      }
+      .review__avatar {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--grad);
+        font-weight: 900;
+        font-size: 18px;
+      }
+      .reviews__src {
+        margin-top: 36px;
+        color: var(--fg-2);
+        font-size: 15px;
+      }
+      .reviews__src a {
+        color: var(--fg);
+      }
+
+      .prices {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        gap: 16px;
+      }
+      .price {
+        position: relative;
+        overflow: hidden;
+        padding: 34px;
+        border-radius: var(--r);
+        background: var(--card);
+        border: 1px solid var(--border);
+        transition:
+          transform 0.5s var(--ease),
+          border-color 0.3s;
+        --gx: 50%;
+        --gy: 50%;
+      }
+      .price::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          400px circle at var(--gx) var(--gy),
+          rgba(255, 122, 24, 0.18),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+      }
+      .price:hover::before {
+        opacity: 1;
+      }
+      .price--main {
+        background: var(--grad);
+        border: 0;
+      }
+      .price--main::before {
+        background: radial-gradient(
+          400px circle at var(--gx) var(--gy),
+          rgba(255, 255, 255, 0.25),
+          transparent 60%
+        );
+      }
+      .price__label {
+        position: relative;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        opacity: 0.7;
+      }
+      .price__sum {
+        position: relative;
+        display: block;
+        margin: 14px 0 14px;
+        font-weight: 900;
+        font-size: clamp(48px, 6vw, 88px);
+        line-height: 1;
+        letter-spacing: -0.05em;
+      }
+      .price p {
+        position: relative;
+        margin: 0 0 26px;
+        opacity: 0.75;
+      }
+      .wear {
+        margin-top: 16px;
+        padding: 30px 34px;
+        border-radius: var(--r);
+        border: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 20px;
+      }
+      .wear h3 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: -0.02em;
+      }
+      .wear ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 30px;
+      }
+      .wear li {
+        color: var(--fg-2);
+      }
+      .wear b {
+        display: block;
+        color: var(--fg);
+      }
+
+      .faq-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1.6fr;
+        gap: 40px;
+        align-items: start;
+      }
+      .faq details {
+        border-bottom: 1px solid var(--border);
+      }
+      .faq details:first-child {
+        border-top: 1px solid var(--border);
+      }
+      .faq summary {
+        list-style: none;
+        position: relative;
+        padding: 26px 56px 26px 0;
+        font-weight: 800;
+        font-size: clamp(18px, 2vw, 22px);
+        letter-spacing: -0.01em;
+        transition: color 0.3s;
+      }
+      .faq summary::-webkit-details-marker {
+        display: none;
+      }
+      .faq summary:hover {
+        color: var(--pink);
+      }
+      .faq summary::after {
+        content: '+';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 40px;
+        height: 40px;
+        margin-top: -20px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        font-size: 22px;
+        font-weight: 400;
+        transition:
+          transform 0.5s var(--ease),
+          background 0.3s,
+          border-color 0.3s;
+      }
+      .faq details[open] summary::after {
+        transform: rotate(135deg);
+        background: var(--pink);
+        border-color: var(--pink);
+        color: #fff;
+      }
+      .faq p {
+        margin: 0 0 26px;
+        color: var(--fg-2);
+        font-size: 17px;
+        animation: faqIn 0.5s var(--ease);
+      }
+      @keyframes faqIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+      }
+
+      .footer {
+        padding: 0 0 36px;
+      }
+      .footer__cta {
+        display: block;
+        width: 100%;
+        padding: 40px 0;
+        border: 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        background: none;
+        overflow: hidden;
+        white-space: nowrap;
+        transition: background 0.5s var(--ease);
+      }
+      .footer__cta:hover {
+        background: var(--pink);
+      }
+      .footer__cta-track {
+        display: inline-flex;
+        align-items: center;
+        gap: 40px;
+        animation: marquee 25s linear infinite;
+      }
+      .footer__cta:hover .footer__cta-track {
+        animation-duration: 10s;
+      }
+      .footer__cta span span {
+        font-weight: 900;
+        font-size: clamp(56px, 10vw, 150px);
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+        line-height: 1;
+      }
+      .footer__cta span span:nth-child(4n + 3) {
+        color: transparent;
+        -webkit-text-stroke: 2px var(--fg);
+      }
+      .footer__cta b {
+        font-size: 50px;
+        color: var(--pink);
+        transition: color 0.3s;
+      }
+      .footer__cta:hover b {
+        color: #fff;
+      }
+      .footer__grid {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 40px;
+        padding: 90px 0 60px;
+      }
+      .footer__info {
+        display: grid;
+        gap: 34px;
+        align-content: start;
+      }
+      .footer__col p {
+        margin: 0 0 10px;
+        color: var(--fg-2);
+      }
+      .footer__col b {
+        color: var(--fg);
+        font-size: 22px;
+        letter-spacing: -0.02em;
+      }
+      .footer__col b a {
+        text-decoration: none;
+      }
+      .link {
+        position: relative;
+        font-weight: 700;
+        text-decoration: none;
+        color: var(--pink);
+      }
+      .link::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -2px;
+        height: 1.5px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s var(--ease);
+      }
+      .link:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+      .socials {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .socials a {
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        text-decoration: none;
+        font-weight: 700;
+        transition:
+          background 0.3s,
+          color 0.3s,
+          border-color 0.3s,
+          transform 0.4s var(--ease);
+      }
+      .socials a:hover {
+        background: var(--fg);
+        color: var(--bg);
+        transform: translateY(-3px);
+      }
+      .footer__map {
+        width: 100%;
+        min-height: 420px;
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        filter: grayscale(0.9) invert(0.92) hue-rotate(180deg) contrast(0.9);
+      }
+      .footer__bottom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-top: 30px;
+        border-top: 1px solid var(--border);
+        color: var(--fg-2);
+        font-size: 14px;
+      }
+      .footer__logo {
+        display: block;
+        width: auto;
+        height: 120px;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .modal.is-open {
+        opacity: 1;
+      }
+      .modal__box {
+        position: relative;
+        width: min(500px, 100%);
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        padding: 36px;
+        transform: translateY(30px) scale(0.96);
+        transition: transform 0.5s var(--ease);
+      }
+      .modal__box--wide {
+        width: min(860px, 100%);
+        padding: 0;
+      }
+      .modal.is-open .modal__box {
+        transform: none;
+      }
+      .modal__box h3 {
+        margin: 0 0 8px;
+        font-weight: 900;
+        font-size: 30px;
+        letter-spacing: -0.03em;
+      }
+      .modal__lead {
+        color: var(--fg-2);
+        margin: 0 0 20px;
+      }
+      .modal__close {
+        position: absolute;
+        z-index: 2;
+        top: 16px;
+        right: 16px;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(6px);
+        font-size: 24px;
+        transition:
+          transform 0.4s var(--ease),
+          background 0.3s;
+      }
+      .modal__close:hover {
+        transform: rotate(90deg);
+        background: var(--pink);
+      }
+      .dir-view {
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+      }
+      .dir-view__img {
+        min-height: 420px;
+        border-radius: 28px 0 0 28px;
+      }
+      .dir-view__img.has-video {
+        min-height: 560px;
+        background: #000;
+      }
+      .dir-view__video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: inherit;
+        background: #000;
+      }
+      .dir-view__video.is-vertical {
+        object-fit: contain;
+      }
+      .dir-view__body {
+        padding: 40px 36px;
+      }
+      .dir-view__ages {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: var(--lime);
+        color: #000;
+        font-weight: 800;
+        font-size: 13px;
+        margin-bottom: 14px;
+      }
+      .dir-view__body p {
+        color: var(--fg-2);
+      }
+      .dir-view__body h4 {
+        margin: 24px 0 10px;
+        font-size: 13px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--fg-2);
+      }
+      .dir-view__slots {
+        list-style: none;
+        margin: 0 0 26px;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .dir-view__slots li {
+        padding: 7px 12px;
+        border-radius: 10px;
+        background: var(--card-2);
+        border: 1px solid var(--border);
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      .form {
+        display: grid;
+        gap: 14px;
+      }
+      .form label {
+        display: grid;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .form input,
+      .form select,
+      .form textarea {
+        width: 100%;
+        padding: 13px 15px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fff;
+        color: var(--ink);
+        font-weight: 400;
+      }
+      .form input:focus,
+      .form select:focus,
+      .form textarea:focus {
+        outline: none;
+        border-color: var(--pink);
+        box-shadow: 0 0 0 3px rgba(255, 45, 138, 0.2);
+      }
+      .modal .form input,
+      .modal .form select,
+      .modal .form textarea {
+        background: var(--bg);
+        border-color: var(--border);
+        color: var(--fg);
+      }
+      .modal .form select:disabled {
+        opacity: 0.7;
+      }
+      .form__row {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 12px;
+      }
+      .form .form__check {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-weight: 400;
+        color: var(--fg-2);
+      }
+      .form__check input {
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        accent-color: var(--pink);
+        flex: none;
+      }
+      .form__slot {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        padding: 12px 16px;
+        border-radius: 14px;
+        background: var(--bg);
+        border: 1px solid rgba(255, 45, 138, 0.4);
+      }
+      .form__slot span {
+        grid-column: 1;
+        font-size: 14px;
+        color: var(--fg-2);
+      }
+      .form__slot button {
+        grid-row: 1 / 3;
+        grid-column: 2;
+        border: 0;
+        background: none;
+        font-size: 22px;
+        color: var(--fg-2);
+      }
+      .form__errors {
+        margin: 0;
+        padding: 12px 12px 12px 30px;
+        background: rgba(229, 72, 77, 0.12);
+        color: #ff8a8d;
+        border-radius: 14px;
+        font-size: 14px;
+      }
+      .done {
+        text-align: center;
+      }
+      .done__icon {
+        width: 76px;
+        height: 76px;
+        margin: 0 auto 14px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--grad);
+        color: #fff;
+        font-size: 36px;
+        font-weight: 900;
+        animation: pop 0.6s var(--ease);
+      }
+      @keyframes pop {
+        from {
+          transform: scale(0) rotate(-90deg);
+        }
+      }
+
+      @media (max-width: 1100px) {
+        .more__grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .prices {
+          grid-template-columns: 1fr 1fr;
+        }
+        .price--main {
+          grid-column: 1 / -1;
+        }
+      }
+      @media (max-width: 900px) {
+        .nav {
+          position: fixed;
+          inset: 76px 0 auto;
+          flex-direction: column;
+          gap: 0;
+          padding: 10px 20px 24px;
+          background: rgba(8, 8, 8, 0.97);
+          backdrop-filter: blur(14px);
+          transform: translateY(-120%);
+          transition: transform 0.5s var(--ease);
+        }
+        .nav.is-open {
+          transform: none;
+        }
+        .nav a {
+          padding: 14px 0;
+          font-size: 26px;
+          font-weight: 800;
+          color: var(--fg);
+          border-bottom: 1px solid var(--border);
+        }
+        .nav a::after {
+          display: none;
+        }
+        .burger {
+          display: block;
+          margin-left: auto;
+        }
+        .header__cta {
+          margin-left: auto;
+        }
+        .header__cta + .burger {
+          margin-left: 0;
+        }
+        .badge-spin {
+          width: 110px;
+          height: 110px;
+          top: auto;
+          bottom: 34%;
+        }
+        .badge-spin text {
+          font-size: 15px;
+        }
+        .manifesto__row,
+        .faq-wrap,
+        .footer__grid,
+        .dir-view {
+          grid-template-columns: 1fr;
+        }
+        .manifesto__photo {
+          min-height: 320px;
+        }
+        .dir-view__img {
+          min-height: 240px;
+          border-radius: 28px 28px 0 0;
+        }
+        .dir-view__img.has-video {
+          min-height: 62vh;
+        }
+        .dir__row {
+          grid-template-columns: 1fr auto;
+          gap: 14px;
+          padding: 18px 4px;
+        }
+        .dir__num {
+          display: none;
+        }
+        .dir__arrow {
+          display: none;
+        }
+        .dir__name {
+          font-size: clamp(20px, 5.6vw, 44px);
+          overflow-wrap: anywhere;
+        }
+        .wear {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 600px) {
+        .container,
+        .hero__inner {
+          width: calc(100% - 32px);
+        }
+        .section {
+          padding: 90px 0;
+        }
+        .header__row {
+          height: 66px;
+          gap: 10px;
+        }
+        .nav {
+          inset: 66px 0 auto;
+        }
+        .header__cta {
+          padding: 9px 14px;
+          font-size: 13px;
+        }
+        .logo__img {
+          height: 46px;
+        }
+        .hero {
+          padding-bottom: 80px;
+        }
+        .hero__title {
+          font-size: clamp(48px, 16.5vw, 120px);
+        }
+        .hero__script {
+          position: static;
+          display: block;
+          margin-top: 4px;
+          font-size: 36px;
+        }
+        .badge-spin {
+          display: none;
+        }
+        .ribbons {
+          height: 160px;
+        }
+        .ribbon {
+          padding: 12px 0;
+        }
+        .stats {
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .stats li {
+          padding: 18px;
+          gap: 18px;
+        }
+        .more__grid,
+        .prices,
+        .wear ul {
+          grid-template-columns: 1fr;
+        }
+        .review {
+          width: 300px;
+          padding: 24px;
+        }
+        .review blockquote {
+          font-size: 16px;
+        }
+        .ratings {
+          width: 100%;
+        }
+        .rating {
+          flex: 1;
+          padding: 14px 16px;
+        }
+        .rating b {
+          font-size: 34px;
+        }
+        .form__row {
+          grid-template-columns: 1fr;
+        }
+        .modal__box {
+          padding: 28px 20px;
+        }
+        .modal__box--wide {
+          padding: 0;
+        }
+        .dir-view__body {
+          padding: 26px 20px;
+        }
+        .footer__cta {
+          padding: 26px 0;
+        }
+        .shot--1,
+        .shot--0 {
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+        .preloader {
+          display: none;
+        }
+      }
+
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        background: var(--bg);
+        color: var(--fg);
+      }
+      .header {
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+      .js [data-reveal] {
+        opacity: 1;
+        transform: translateY(28px);
+      }
+      .footer__map--link {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 30px;
+        min-height: 320px;
+        text-decoration: none;
+        color: var(--fg);
+        background:
+          radial-gradient(circle at 70% 30%, rgba(255, 45, 138, 0.35), transparent 60%),
+          repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 40px),
+          repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 40px), var(--card);
+        filter: none;
+      }
+      .footer__map--link b {
+        font-size: 26px;
+        letter-spacing: -0.02em;
+      }
+      .mockup-badge {
+        position: fixed;
+        left: 50%;
+        bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+        transform: translateX(-50%);
+        z-index: 90;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: rgba(20, 20, 20, 0.85);
+        backdrop-filter: blur(8px);
+        border: 1px solid var(--border);
+        color: var(--fg-2);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+    </style>
+    <script>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body class="is-loading">
+    <div class="preloader" aria-hidden="true">
+      <div class="preloader__word">
+        <span style="--i: 0">F</span><span style="--i: 1">A</span><span style="--i: 2">M</span
+        ><span style="--i: 3">I</span><span style="--i: 4">L</span><span style="--i: 5">Y</span
+        ><span style="--i: 6">&nbsp;</span><span style="--i: 7">D</span><span style="--i: 8">A</span
+        ><span style="--i: 9">N</span><span style="--i: 10">C</span><span style="--i: 11">E</span>
+      </div>
+      <div class="preloader__bar"><i id="preBar"></i></div>
+    </div>
+
+    <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+
+    <header class="header">
+      <div class="container header__row">
+        <a class="logo" href="#top" aria-label="Family Dance — наверх">
+          <img class="logo__img" src="../assets/img/logo.webp" alt="Family Dance" width="67" height="56" />
+        </a>
+        <nav class="nav" id="nav">
+          <a href="#about">О нас</a>
+          <a href="#directions">Направления</a>
+          <a href="#reviews">Отзывы</a>
+          <a href="#prices">Цены</a>
+          <a href="#contacts">Контакты</a>
+        </nav>
+        <button class="btn btn--sm header__cta magnetic" data-modal-open="signupModal">Записаться</button>
+        <button class="burger" aria-label="Меню" aria-expanded="false" aria-controls="nav">
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <section class="hero" id="top">
+      <div class="hero__media" data-parallax="0.3">
+        <img src="../assets/img/hero.webp" alt="" />
+      </div>
+      <div class="hero__grain" aria-hidden="true"></div>
+      <div class="hero__spot" aria-hidden="true"></div>
+
+      <div class="container hero__inner">
+        <p class="hero__kicker"><span class="dot"></span>Школа танцев · Оренбург, Степной</p>
+        <h1 class="hero__title" aria-label="Танцуй жизнь">
+          <span class="line"><span class="word" data-letters>ТАНЦУЙ</span></span>
+          <span class="line line--outline"
+            ><span class="word" data-letters>ЖИЗНЬ</span><span class="hero__script">вместе с нами</span></span
+          >
+        </h1>
+        <div class="hero__bottom">
+          <p class="hero__text">
+            Не просто учим танцевать — снимаем клипы и кино, устраиваем концерты, фотосессии и вечеринки. Для
+            детей от 5 лет, подростков и взрослых.
+          </p>
+          <div class="hero__btns">
+            <button class="btn magnetic" data-modal-open="signupModal">
+              <span>Записаться на пробный</span> →
+            </button>
+            <a href="#directions" class="btn btn--ghost magnetic">Направления</a>
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="badge-spin"
+        data-modal-open="signupModal"
+        data-cursor="го!"
+        aria-label="Записаться на пробный урок"
+      >
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <defs><path id="circlePath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs>
+          <text>
+            <textPath href="#circlePath" textLength="486" lengthAdjust="spacingAndGlyphs">
+              ПРОБНЫЙ УРОК ✦ ЗАПИШИСЬ ✦ ПРОБНЫЙ УРОК ✦ ЗАПИШИСЬ ✦
+            </textPath>
+          </text>
+        </svg>
+        <span class="badge-spin__arrow">↗</span>
+      </button>
+
+      <a href="#about" class="hero__scroll" aria-label="Листать вниз"><span></span></a>
+    </section>
+
+    <div class="ribbons" aria-hidden="true">
+      <div class="ribbon ribbon--pink">
+        <div class="ribbon__track">
+          <span>танцуй жизнь</span><b>✦</b><span>FAMILY DANCE</span><b>✦</b><span>танцуй жизнь</span><b>✦</b
+          ><span>FAMILY DANCE</span><b>✦</b><span>танцуй жизнь</span><b>✦</b><span>FAMILY DANCE</span><b>✦</b
+          ><span>танцуй жизнь</span><b>✦</b><span>FAMILY DANCE</span><b>✦</b><span>танцуй жизнь</span><b>✦</b
+          ><span>FAMILY DANCE</span><b>✦</b><span>танцуй жизнь</span><b>✦</b><span>FAMILY DANCE</span><b>✦</b>
+        </div>
+      </div>
+      <div class="ribbon ribbon--light">
+        <div class="ribbon__track ribbon__track--reverse">
+          <span>Choreo</span><b>✦</b><span>Современная хореография</span><b>✦</b><span>Jazz Funk</span><b>✦</b
+          ><span>Contemporary</span><b>✦</b><span>High Heels</span><b>✦</b><span>Girl Choreo</span><b>✦</b
+          ><span>Детская хореография</span><b>✦</b><span>Lady Dance</span><b>✦</b><span>Choreo</span><b>✦</b
+          ><span>Современная хореография</span><b>✦</b><span>Jazz Funk</span><b>✦</b><span>Contemporary</span
+          ><b>✦</b><span>High Heels</span><b>✦</b><span>Girl Choreo</span><b>✦</b
+          ><span>Детская хореография</span><b>✦</b><span>Lady Dance</span><b>✦</b><span>Choreo</span><b>✦</b
+          ><span>Современная хореография</span><b>✦</b><span>Jazz Funk</span><b>✦</b><span>Contemporary</span
+          ><b>✦</b><span>High Heels</span><b>✦</b><span>Girl Choreo</span><b>✦</b
+          ><span>Детская хореография</span><b>✦</b><span>Lady Dance</span><b>✦</b>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <section class="section manifesto" id="about">
+        <div class="container">
+          <p class="eyebrow" data-reveal>( о нас )</p>
+          <p class="manifesto__text" data-words>
+            Family Dance — не просто школа танцев. Мы — театр танца. Протест против скуки, выход за рамки,
+            смешение искусств и новая реальность для каждого ученика. Наша задача — раскрыть танец внутри
+            тебя.
+          </p>
+
+          <div class="manifesto__row">
+            <div class="manifesto__photo ph" data-reveal style="--img: url('../assets/img/about.webp')">
+              <span class="ph__label">about</span>
+            </div>
+            <ul class="stats">
+              <li data-reveal><b data-count="2017">0</b><span>год, с которого танцуем вместе</span></li>
+              <li data-reveal><b data-count="166">0</b><span>оценок 5,0 на Яндекс Картах</span></li>
+              <li data-reveal>
+                <b data-count="4800" data-suffix="+">0</b><span>человек в сообществе ВК</span>
+              </li>
+              <li data-reveal>
+                <b data-count="5" data-suffix="+">0</b><span>лет — возраст, с которого можно начать</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="more" data-reveal>
+            <h3 class="more__title">Не просто учим <span class="hl-script">танцевать</span></h3>
+            <div class="more__grid">
+              <div class="more__item tilt">
+                <span>01</span><b>Кино и клипы</b>
+                <p>Ученики снимаются в настоящих видеопроектах</p>
+              </div>
+              <div class="more__item tilt">
+                <span>02</span><b>Сцена</b>
+                <p>Отчётные концерты и выступления перед родными</p>
+              </div>
+              <div class="more__item tilt">
+                <span>03</span><b>Фотосессии</b>
+                <p>Профессиональные съёмки в образах</p>
+              </div>
+              <div class="more__item tilt">
+                <span>04</span><b>Вечеринки и мастер-классы</b>
+                <p>Ивенты школы и приглашённые хореографы</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section directions-sec" id="directions">
+        <div class="container">
+          <div class="sec-head">
+            <h2 class="title" data-reveal>Направ&shy;ления</h2>
+            <div class="chips" role="group" aria-label="Для кого" data-reveal>
+              <button class="chip is-active" data-aud="all">Все</button>
+              <button class="chip" data-aud="kids">Для детей</button>
+              <button class="chip" data-aud="teens">Для подростков</button>
+              <button class="chip" data-aud="adults">Для взрослых</button>
+            </div>
+          </div>
+
+          <ol class="dir-list">
+            <li class="dir" data-aud="teens,adults" data-reveal>
+              <button
+                class="dir__row"
+                data-cursor="смотреть"
+                data-img="../assets/video/choreo.jpg"
+                data-name="Хорео"
+                data-direction='{"id":1,"name":"Choreo","nameRu":"Хорео","ages":"12+","description":"Энергичное направление, которое объединяет уличные стили: хип-хоп, k-pop, джаз-фанк. Главное преимущество — никаких рамок.","img":"..\/assets\/video\/choreo.jpg","video":"..\/assets\/video\/choreo.mp4","poster":"..\/assets\/video\/choreo.jpg","slots":["Пн 17:00 · 12+","Ср 17:00 · 12+","Пт 17:00 · 12+"]}'
+              >
+                <span class="dir__num">01</span>
+                <span class="dir__thumb ph" style="--img: url('../assets/video/choreo.jpg')"
+                  ><span class="ph__label">Хорео</span></span
+                >
+                <span class="dir__name"
+                  ><span class="dir__name-a">Choreo</span><span class="dir__name-b">Хорео</span></span
+                >
+                <span class="dir__ages">12+</span>
+                <span class="dir__arrow">↗</span>
+              </button>
+            </li>
+            <li class="dir" data-aud="kids,teens,adults" data-reveal>
+              <button
+                class="dir__row"
+                data-cursor="смотреть"
+                data-img="../assets/video/modern.jpg"
+                data-name="Современная хореография"
+                data-direction='{"id":2,"name":"Современная хореография","nameRu":"Современная хореография","ages":"7+","description":"Гибкость, свобода самовыражения и индивидуальность танцора. Есть группы для начинающих, PRO и детская группа 7+.","img":"..\/assets\/video\/modern.jpg","video":"..\/assets\/video\/modern.mp4","poster":"..\/assets\/video\/modern.jpg","slots":["Пн 17:00 · 12+","Пн 18:00 · 12+ · PRO","Пн 19:00 · 12+","Пн 20:00 · 7–11 лет","Ср 17:00 · 12+","Ср 18:00 · 12+ · PRO","Ср 19:00 · 12+","Ср 20:00 · 7–11 лет","Пт 17:00 · 12+","Пт 18:00 · 12+ · PRO","Пт 19:00 · 12+","Пт 20:00 · 7–11 лет"]}'
+              >
+                <span class="dir__num">02</span>
+                <span class="dir__thumb ph" style="--img: url('../assets/video/modern.jpg')"
+                  ><span class="ph__label">Современная хореография</span></span
+                >
+                <span class="dir__name"
+                  ><span class="dir__name-a">Современная хореография</span
+                  ><span class="dir__name-b">Современная хореография</span></span
+                >
+                <span class="dir__ages">7+</span>
+                <span class="dir__arrow">↗</span>
+              </button>
+            </li>
+            <li class="dir" data-aud="teens,adults" data-reveal>
+              <button
+                class="dir__row"
+                data-cursor="смотреть"
+                data-img="../assets/video/jazzfunk.jpg"
+                data-name="Джаз Фанк"
+                data-direction='{"id":3,"name":"Jazz Funk","nameRu":"Джаз Фанк","ages":"12+","description":"Современный и энергичный стиль, который раскрывает красоту, эстетику и уверенность в себе.","img":"..\/assets\/video\/jazzfunk.jpg","video":"..\/assets\/video\/jazzfunk.mp4","poster":"..\/assets\/video\/jazzfunk.jpg","slots":["Пн 20:00 · 16+","Вт 20:00 · 12+","Ср 20:00 · 16+","Чт 20:00 · 12+","Пт 20:00 · 16+"]}'
+              >
+                <span class="dir__num">03</span>
+                <span class="dir__thumb ph" style="--img: url('../assets/video/jazzfunk.jpg')"
+                  ><span class="ph__label">Джаз Фанк</span></span
+                >
+                <span class="dir__name"
+                  ><span class="dir__name-a">Jazz Funk</span><span class="dir__name-b">Джаз Фанк</span></span
+                >
+                <span class="dir__ages">12+</span>
+                <span class="dir__arrow">↗</span>
+              </button>
+            </li>
+            <li class="dir" data-aud="teens,adults" data-reveal>
+              <button
+                class="dir__row"
+                data-cursor="смотреть"
+                data-img="../assets/video/contemporary.jpg"
+                data-name="Контемпорари"
+                data-direction='{"id":4,"name":"Contemporary","nameRu":"Контемпорари","ages":"12+","description":"Экспрессивный современный танец на стыке модерна, классической хореографии и джаза.","img":"..\/assets\/video\/contemporary.jpg","video":"..\/assets\/video\/contemporary.mp4","poster":"..\/assets\/video\/contemporary.jpg","slots":["Вт 19:00 · 12+","Чт 19:00 · 12+"]}'
+              >
+                <span class="dir__num">04</span>
+                <span class="dir__thumb ph" style="--img: url('../assets/video/contemporary.jpg')"
+                  ><span class="ph__label">Контемпорари</span></span
+                >
+                <span class="dir__name"
+                  ><span class="dir__name-a">Contemporary</span
+                  ><span class="dir__name-b">Контемпорари</span></span
+                >
+                <span class="dir__ages">12+</span>
+                <span class="dir__arrow">↗</span>
+              </button>
+            </li>
+            <li class="dir" data-aud="adults" data-reveal>
+              <button
+                class="dir__row"
+                data-cursor="смотреть"
+                data-img="../assets/video/heels.jpg"
+                data-name="Хай-Хилс"
+                data-direction='{"id":5,"name":"High Heels","nameRu":"Хай-Хилс","ages":"18+","description":"Эстетичное направление на высоких каблуках: управление телом, гибкость и чувство своего тела.","img":"..\/assets\/video\/heels.jpg","video":"..\/assets\/video\/heels.mp4","poster":"..\/assets\/video\/heels.jpg","slots":["Вт 20:00 · 18+","Чт 20:00 · 18+"]}'
+              >
+                <span class="dir__num">05</span>
+                <span class="dir__thumb ph" style="--img: url('../assets/video/heels.jpg')"
+                  ><span class="ph__label">Хай-Хилс</span></span
+                >
+                <span class="dir__name"
+                  ><span class="dir__name-a">High Heels</span><span class="dir__name-b">Хай-Хилс</span></span
+                >
+                <span class="dir__ages">18+</span>
+                <span class="dir__arrow">↗</span>
+              </button>
+            </li>
+            <li class="dir" data-aud="teens,adults" data-reveal>
+              <button
+                class="dir__row"
+                data-cursor="смотреть"
+                data-img="../assets/video/girlchoreo.jpg"
+                data-name="Гёрли Хорео"
+                data-direction='{"id":6,"name":"Girl Choreo","nameRu":"Гёрли Хорео","ages":"12+","description":"Нежный, женственный и пластичный стиль на основе джаз-фанка. Развивает гибкость, красоту и грацию движений.","img":"..\/assets\/video\/girlchoreo.jpg","video":"..\/assets\/video\/girlchoreo.mp4","poster":"..\/assets\/video\/girlchoreo.jpg","slots":["Пн 18:00 · 12+","Ср 18:00 · 12+","Пт 18:00 · 12+"]}'
+              >
+                <span class="dir__num">06</span>
+                <span class="dir__thumb ph" style="--img: url('../assets/video/girlchoreo.jpg')"
+                  ><span class="ph__label">Гёрли Хорео</span></span
+                >
+                <span class="dir__name"
+                  ><span class="dir__name-a">Girl Choreo</span
+                  ><span class="dir__name-b">Гёрли Хорео</span></span
+                >
+                <span class="dir__ages">12+</span>
+                <span class="dir__arrow">↗</span>
+              </button>
+            </li>
+            <li class="dir" data-aud="kids" data-reveal>
+              <button
+                class="dir__row"
+                data-cursor="смотреть"
+                data-img="../assets/img/kids.webp"
+                data-name="Детская хореография"
+                data-direction='{"id":7,"name":"Детская хореография","nameRu":"Детская хореография","ages":"5–7 лет","description":"Детская эстрадная хореография: музыкальный слух, координация, осанка и уверенность в себе.","img":"..\/assets\/img\/kids.webp","video":"","poster":"","slots":["Вт 18:00 · 5–7 лет","Чт 18:00 · 5–7 лет"]}'
+              >
+                <span class="dir__num">07</span>
+                <span class="dir__thumb ph" style="--img: url('../assets/img/kids.webp')"
+                  ><span class="ph__label">Детская хореография</span></span
+                >
+                <span class="dir__name"
+                  ><span class="dir__name-a">Детская хореография</span
+                  ><span class="dir__name-b">Детская хореография</span></span
+                >
+                <span class="dir__ages">5–7 лет</span>
+                <span class="dir__arrow">↗</span>
+              </button>
+            </li>
+            <li class="dir" data-aud="adults" data-reveal>
+              <button
+                class="dir__row"
+                data-cursor="смотреть"
+                data-img=""
+                data-name="Леди Дэнс"
+                data-direction='{"id":8,"name":"Lady Dance","nameRu":"Леди Дэнс","ages":"18+","description":"Современный стиль для взрослых: научиться красиво двигаться, раскрепоститься и стать пластичнее.","img":"","video":"","poster":"","slots":["Вт 20:00 · 18+","Чт 20:00 · 18+"]}'
+              >
+                <span class="dir__num">08</span>
+                <span class="dir__thumb ph"><span class="ph__label">Леди Дэнс</span></span>
+                <span class="dir__name"
+                  ><span class="dir__name-a">Lady Dance</span><span class="dir__name-b">Леди Дэнс</span></span
+                >
+                <span class="dir__ages">18+</span>
+                <span class="dir__arrow">↗</span>
+              </button>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="hscroll" id="gallery" aria-label="Галерея">
+        <div class="hscroll__sticky">
+          <div class="hscroll__head container">
+            <h2 class="title">Это <span class="hl-script">мы</span></h2>
+            <p>Концерты, съёмки, репетиции и сцена</p>
+          </div>
+          <div class="hscroll__track">
+            <figure class="shot shot--1">
+              <div class="shot__img ph" style="--img: url('../assets/img/gallery-1.webp')">
+                <span class="ph__label">gallery-1</span>
+              </div>
+              <figcaption><span>01</span>Сцена</figcaption>
+            </figure>
+            <figure class="shot shot--2">
+              <div class="shot__img ph" style="--img: url('../assets/img/gallery-2.webp')">
+                <span class="ph__label">gallery-2</span>
+              </div>
+              <figcaption><span>02</span>Отчётный концерт</figcaption>
+            </figure>
+            <figure class="shot shot--0">
+              <div class="shot__img ph" style="--img: url('../assets/img/gallery-3.webp')">
+                <span class="ph__label">gallery-3</span>
+              </div>
+              <figcaption><span>03</span>Детская хореография</figcaption>
+            </figure>
+            <figure class="shot shot--1">
+              <div class="shot__img ph" style="--img: url('../assets/img/gallery-4.webp')">
+                <span class="ph__label">gallery-4</span>
+              </div>
+              <figcaption><span>04</span>Пластика</figcaption>
+            </figure>
+            <figure class="shot shot--2">
+              <div class="shot__img ph" style="--img: url('../assets/img/gallery-5.webp')">
+                <span class="ph__label">gallery-5</span>
+              </div>
+              <figcaption><span>05</span>Командная постановка</figcaption>
+            </figure>
+            <figure class="shot shot--0">
+              <div class="shot__img ph" style="--img: url('../assets/img/gallery-6.webp')">
+                <span class="ph__label">gallery-6</span>
+              </div>
+              <figcaption><span>06</span>В полёте</figcaption>
+            </figure>
+            <figure class="shot shot--1">
+              <div class="shot__img ph" style="--img: url('../assets/img/gallery-7.webp')">
+                <span class="ph__label">gallery-7</span>
+              </div>
+              <figcaption><span>07</span>За кулисами</figcaption>
+            </figure>
+            <figure class="shot shot--2">
+              <div class="shot__img ph" style="--img: url('../assets/img/gallery-8.webp')">
+                <span class="ph__label">gallery-8</span>
+              </div>
+              <figcaption><span>08</span>Вся семья Family Dance</figcaption>
+            </figure>
+            <div class="shot shot--cta">
+              <p>Следующее фото — <span class="hl-script">с тобой</span></p>
+              <button class="btn magnetic" data-modal-open="signupModal">Записаться</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reviews-sec" id="reviews">
+        <div class="container reviews-head">
+          <h2 class="title" data-reveal>Говорят <span class="hl-script">ученики</span></h2>
+          <div class="ratings" data-reveal>
+            <a
+              class="rating"
+              href="https://yandex.ru/maps/org/69165600706/reviews/"
+              target="_blank"
+              rel="noopener"
+              ><b>5,0</b><span>★★★★★</span><small>166 оценок · Яндекс Карты</small></a
+            >
+          </div>
+        </div>
+        <div class="marquee">
+          <div class="marquee__track">
+            <figure class="review">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Чудесная школа танцев! Отличные преподаватели, много мероприятий для учеников, мастер-классы
+                от других хореографов и всегда весёлая, дружелюбная атмосфера.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">В</span>
+                <span><b>Варвара П.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Занимаюсь уже больше года и вдохновляюсь всё больше каждый день. Место, где проблемы
+                моментально забываются. Самый лучший коллектив!
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">М</span>
+                <span><b>Милана П.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Безгранично благодарна школе: она вдохновила меня поступать на хореографа. Преподаватели
+                талантливы, атмосфера шикарная. Family Dance стал вторым домом.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">А</span>
+                <span><b>Александра Х.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Это не просто место, где учат двигаться под музыку, — это настоящий космос, где каждый шаг
+                превращается в искусство. А какие у нас выступления!
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">В</span>
+                <span><b>Виктория С.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Самая лучшая школа танцев в Оренбурге. Никогда никого не ругают, всегда поддержат и расскажут,
+                как правильно. С этой школой я стала птицей в свободном полёте.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">Д</span>
+                <span><b>Дина Н.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review" aria-hidden="true">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Чудесная школа танцев! Отличные преподаватели, много мероприятий для учеников, мастер-классы
+                от других хореографов и всегда весёлая, дружелюбная атмосфера.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">В</span>
+                <span><b>Варвара П.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review" aria-hidden="true">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Занимаюсь уже больше года и вдохновляюсь всё больше каждый день. Место, где проблемы
+                моментально забываются. Самый лучший коллектив!
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">М</span>
+                <span><b>Милана П.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review" aria-hidden="true">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Безгранично благодарна школе: она вдохновила меня поступать на хореографа. Преподаватели
+                талантливы, атмосфера шикарная. Family Dance стал вторым домом.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">А</span>
+                <span><b>Александра Х.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review" aria-hidden="true">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Это не просто место, где учат двигаться под музыку, — это настоящий космос, где каждый шаг
+                превращается в искусство. А какие у нас выступления!
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">В</span>
+                <span><b>Виктория С.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review" aria-hidden="true">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Самая лучшая школа танцев в Оренбурге. Никогда никого не ругают, всегда поддержат и расскажут,
+                как правильно. С этой школой я стала птицей в свободном полёте.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">Д</span>
+                <span><b>Дина Н.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="marquee marquee--reverse">
+          <div class="marquee__track">
+            <figure class="review">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Возвращаясь сюда, чувствуешь себя как дома. Подготовка к концертам и съёмкам даёт незабываемые
+                эмоции и заряд энергии!
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">В</span>
+                <span><b>Валерия Б.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Дочка почти 2 года ходит на детскую хореографию. Сюжеты и образы в постановках всегда
+                восхищают, а ученики искренне любят своих педагогов.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">М</span>
+                <span><b>Марина П.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Находка для тех, кто хочет научиться или уже танцует. Хожу всего пару месяцев, и мне очень
+                нравится! Добрые хореографы.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">Д</span>
+                <span><b>Диана Л.</b><small>ВКонтакте · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Любимая школа танцев, лучшая в городе. Здесь все очень хорошие, и всегда хочется вернуться ещё
+                и ещё.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">Т</span>
+                <span><b>Татьяна Г.</b><small>ВКонтакте · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review" aria-hidden="true">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Возвращаясь сюда, чувствуешь себя как дома. Подготовка к концертам и съёмкам даёт незабываемые
+                эмоции и заряд энергии!
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">В</span>
+                <span><b>Валерия Б.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review" aria-hidden="true">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Дочка почти 2 года ходит на детскую хореографию. Сюжеты и образы в постановках всегда
+                восхищают, а ученики искренне любят своих педагогов.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">М</span>
+                <span><b>Марина П.</b><small>Яндекс Карты · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review" aria-hidden="true">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Находка для тех, кто хочет научиться или уже танцует. Хожу всего пару месяцев, и мне очень
+                нравится! Добрые хореографы.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">Д</span>
+                <span><b>Диана Л.</b><small>ВКонтакте · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+            <figure class="review" aria-hidden="true">
+              <span class="review__quote">“</span>
+              <blockquote>
+                Любимая школа танцев, лучшая в городе. Здесь все очень хорошие, и всегда хочется вернуться ещё
+                и ещё.
+              </blockquote>
+              <figcaption>
+                <span class="review__avatar">Т</span>
+                <span><b>Татьяна Г.</b><small>ВКонтакте · ★★★★★</small></span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+        <p class="container reviews__src" data-reveal>
+          Настоящие отзывы учеников и родителей —
+          <a href="https://yandex.ru/maps/org/69165600706/reviews/" target="_blank" rel="noopener"
+            >все отзывы на Яндекс Картах ↗</a
+          >
+        </p>
+      </section>
+
+      <section class="section" id="prices">
+        <div class="container">
+          <h2 class="title" data-reveal>Цены</h2>
+          <div class="prices">
+            <article class="price price--main tilt" data-reveal>
+              <span class="price__label">Абонемент · 8 занятий</span>
+              <b class="price__sum"><span data-count="3000">0</span> ₽</b>
+              <p>Одна цена для всех направлений — от детской хореографии до High Heels.</p>
+              <button class="btn btn--light magnetic" data-modal-open="signupModal">
+                Записаться на пробный →
+              </button>
+            </article>
+            <article class="price tilt" data-reveal>
+              <span class="price__label">Разовое занятие</span>
+              <b class="price__sum">500 ₽</b>
+              <p>Попробовать направление без абонемента.</p>
+            </article>
+            <article class="price tilt" data-reveal>
+              <span class="price__label">Мерч «Танцую жизнь»</span>
+              <b class="price__sum">2 500 ₽</b>
+              <p>Печать на вашем лонгсливе или футболке с логотипом школы.</p>
+            </article>
+          </div>
+          <div class="wear" data-reveal>
+            <h3>Что взять на занятие</h3>
+            <ul>
+              <li><b>Всегда</b>свободная одежда, сменная обувь, вода</li>
+              <li><b>Современная хореография, Contemporary</b>носочки или босиком</li>
+              <li><b>High Heels</b>носочки или свои хилсы</li>
+              <li><b>Choreo, Jazz Funk</b>кроссовки</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="faq">
+        <div class="container faq-wrap">
+          <h2 class="title" data-reveal>Вопросы</h2>
+          <div class="faq" data-reveal>
+            <details>
+              <summary>Я никогда не танцевала. Мне можно?</summary>
+              <p>
+                Можно. Большинство учеников приходят с нуля. На пробном уроке педагог показывает всё шаг за
+                шагом — никто не оценивает, только поддерживают.
+              </p>
+            </details>
+            <details>
+              <summary>С какого возраста можно заниматься?</summary>
+              <p>
+                Детская хореография — с 5 лет, детская группа современной хореографии — с 7, большинство
+                направлений — с 12, High Heels и Lady Dance — с 18.
+              </p>
+            </details>
+            <details>
+              <summary>Сколько стоит абонемент?</summary>
+              <p>Абонемент на 8 занятий — 3 000 ₽, разовое занятие — 500 ₽.</p>
+            </details>
+            <details>
+              <summary>Можно прийти с подругой?</summary>
+              <p>Конечно! Приходите вдвоём — будет веселее. В заявке укажите имена обеих.</p>
+            </details>
+            <details>
+              <summary>Записалась, но не смогу прийти — что делать?</summary>
+              <p>
+                Обязательно предупредите администратора. Места в группах ограничены: записываясь, вы
+                бронируете место, которое мог бы занять другой ученик.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="contacts">
+      <button class="footer__cta" data-modal-open="signupModal" data-cursor="записаться">
+        <span class="footer__cta-track"
+          ><span>Приходи танцевать</span><b>✦</b><span>Приходи танцевать</span><b>✦</b
+          ><span>Приходи танцевать</span><b>✦</b><span>Приходи танцевать</span><b>✦</b
+          ><span>Приходи танцевать</span><b>✦</b><span>Приходи танцевать</span><b>✦</b></span
+        >
+      </button>
+      <div class="container footer__grid">
+        <div class="footer__info">
+          <div class="footer__col">
+            <span class="eyebrow">Адрес</span>
+            <p><b>ул. Джангильдина, 3, 1 этаж</b><br />Оренбург, Степной район</p>
+            <a
+              class="link"
+              href="https://yandex.ru/maps/?rtext=~51.827373%2C55.156947&amp;rtt=auto"
+              target="_blank"
+              rel="noopener"
+              >Построить маршрут ↗</a
+            >
+          </div>
+          <div class="footer__col">
+            <span class="eyebrow">Связь</span>
+            <p>
+              <b><a href="tel:+73532921561">+7 (3532) 92-15-61</a></b
+              ><br />Пн–Пт с 17:00, Сб–Вс по записи
+            </p>
+            <a class="link" href="https://t.me/familydance56" target="_blank" rel="noopener"
+              >Запись в Telegram ↗</a
+            >
+          </div>
+          <div class="footer__col">
+            <span class="eyebrow">Соцсети</span>
+            <div class="socials">
+              <a href="https://vk.ru/familyoren" target="_blank" rel="noopener">ВКонтакте</a>
+              <a href="https://t.me/familydanceoren" target="_blank" rel="noopener">Telegram</a>
+              <a href="https://www.tiktok.com/@familydanceoren" target="_blank" rel="noopener">TikTok</a>
+              <a href="https://www.instagram.com/family_dance_oren/" target="_blank" rel="noopener"
+                >Instagram</a
+              >
+            </div>
+          </div>
+        </div>
+        <a
+          class="footer__map footer__map--link"
+          href="https://yandex.ru/maps/org/69165600706/"
+          target="_blank"
+          rel="noopener"
+        >
+          <span class="eyebrow">Карта</span><b>ул. Джангильдина, 3</b
+          ><span class="link">Открыть на Яндекс Картах ↗</span>
+        </a>
+      </div>
+      <div class="container footer__bottom">
+        <img
+          class="footer__logo"
+          src="../assets/img/logo.webp"
+          alt="Family Dance"
+          width="143"
+          height="120"
+          loading="lazy"
+        />
+        <span
+          >© 2026 · Дипломный проект · Фото: Юрий Тублицев ·
+          <a href="admin.html">Вход для администратора</a></span
+        >
+      </div>
+    </footer>
+
+    <div class="modal" id="directionModal" hidden>
+      <div class="modal__box modal__box--wide" role="dialog" aria-modal="true" aria-labelledby="dirTitle">
+        <button class="modal__close" data-modal-close aria-label="Закрыть">×</button>
+        <div class="dir-view">
+          <div class="dir-view__img ph" id="dirImg">
+            <span class="ph__label" id="dirImgLabel"></span
+            ><video
+              class="dir-view__video"
+              id="dirVideo"
+              muted
+              loop
+              playsinline
+              controls
+              preload="none"
+              hidden
+            ></video>
+          </div>
+          <div class="dir-view__body">
+            <span class="dir-view__ages" id="dirAges"></span>
+            <h3 id="dirTitle"></h3>
+            <p id="dirDesc"></p>
+            <h4>Когда занятия</h4>
+            <ul class="dir-view__slots" id="dirSlots"></ul>
+            <button class="btn btn--block" id="dirSignup">Записаться на пробный →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="signupModal" hidden>
+      <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+        <button class="modal__close" data-modal-close aria-label="Закрыть">×</button>
+        <h3 id="signupTitle">Пробный урок</h3>
+        <p class="modal__lead">
+          Оставьте контакты — администратор свяжется с вами и забронирует место в группе.
+        </p>
+        <form id="signupForm" class="form" action="signup.php" method="post" novalidate>
+          <input
+            type="hidden"
+            name="csrf"
+            value="4f9a7a30ffcbb0af8c57272b9a1a05e25dc803a6157f7d893b56251cfd4582cf"
+          />
+          <input type="hidden" name="schedule_id" value="" />
+          <div class="form__slot" id="chosenSlot" hidden></div>
+          <label>Имя<input name="name" required maxlength="100" autocomplete="name" /></label>
+          <label
+            >Телефон<input name="phone" type="tel" required placeholder="+7 900 000-00-00" autocomplete="tel"
+          /></label>
+          <div class="form__row">
+            <label
+              >Возраст ученика<input
+                name="student_age"
+                type="number"
+                min="5"
+                max="70"
+                inputmode="numeric"
+                required
+            /></label>
+            <label
+              >Направление
+              <select name="direction_id">
+                <option value="">Пока не знаю</option>
+                <option value="1">Choreo</option>
+                <option value="2">Современная хореография</option>
+                <option value="3">Jazz Funk</option>
+                <option value="4">Contemporary</option>
+                <option value="5">High Heels</option>
+                <option value="6">Girl Choreo</option>
+                <option value="7">Детская хореография</option>
+                <option value="8">Lady Dance</option>
+              </select>
+            </label>
+          </div>
+          <label
+            >Комментарий<textarea
+              name="comment"
+              rows="2"
+              maxlength="500"
+              placeholder="Например: есть опыт 2 года"
+            ></textarea>
+          </label>
+          <label class="form__check"
+            ><input type="checkbox" name="agree" /> Согласен(на) на обработку персональных данных</label
+          >
+          <ul class="form__errors" id="formErrors" hidden></ul>
+          <button class="btn btn--block" type="submit">Записаться</button>
+        </form>
+        <div class="done" id="signupDone" hidden>
+          <div class="done__icon">✓</div>
+          <p id="signupDoneText"></p>
+          <button class="btn" data-modal-close>Отлично</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.APP = { minAge: 5, maxAge: 70 };
+    </script>
+
+    <script>
+      (() => {
+        const KEY = 'fd-demo-apps';
+        const realFetch = window.fetch.bind(window);
+        window.fetch = (url, opts) => {
+          if (!String(url).includes('signup.php')) return realFetch(url, opts);
+          const b = opts.body;
+          const name = (b.get('name') || '').trim();
+          const phone = (b.get('phone') || '').replace(/\D/g, '');
+          const age = Number(b.get('student_age'));
+          const errors = [];
+          if (name.length < 2) errors.push('Укажите имя (от 2 до 100 символов)');
+          if (!/^[78]\d{10}$/.test(phone)) errors.push('Телефон должен содержать 11 цифр');
+          if (!(age >= 5 && age <= 70)) errors.push('Принимаем учеников от 5 лет');
+          if (!b.get('agree')) errors.push('Нужно согласие на обработку персональных данных');
+          let apps = [];
+          try {
+            apps = JSON.parse(localStorage.getItem(KEY)) || [];
+          } catch {}
+          let body;
+          if (errors.length) body = { ok: false, errors };
+          else {
+            const id = apps.reduce((m, a) => Math.max(m, a.id), 0) + 1;
+            apps.unshift({
+              id,
+              name,
+              phone,
+              age,
+              direction_id: Number(b.get('direction_id')) || null,
+              schedule_id: Number(b.get('schedule_id')) || null,
+              comment: (b.get('comment') || '').trim(),
+              status: 'new',
+              created_at: new Date().toISOString(),
+            });
+            try {
+              localStorage.setItem(KEY, JSON.stringify(apps));
+            } catch {}
+            body = {
+              ok: true,
+              message:
+                name +
+                ', спасибо! Заявка №' +
+                id +
+                ' принята. В демо-версии её видно в админке: «Вход для администратора» внизу страницы.',
+            };
+          }
+          return new Promise((r) =>
+            setTimeout(
+              () =>
+                r(
+                  new Response(JSON.stringify(body), {
+                    status: errors.length ? 422 : 200,
+                    headers: { 'Content-Type': 'application/json' },
+                  })
+                ),
+              500
+            )
+          );
+        };
+      })();
+    </script>
+    <script>
+      'use strict';
+
+      const $ = (sel, root = document) => root.querySelector(sel);
+      const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+      const burger = $('.burger');
+      const nav = $('#nav');
+      function setMenu(open) {
+        nav.classList.toggle('is-open', open);
+        burger.classList.toggle('is-open', open);
+        burger.setAttribute('aria-expanded', open);
+      }
+      burger.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
+      nav.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') setMenu(false);
+      });
+
+      let lastFocus = null;
+
+      function openModal(id) {
+        $$('.modal.is-open').forEach((m) => closeModal(m, false));
+        const modal = document.getElementById(id);
+        lastFocus = lastFocus || document.activeElement;
+        modal.hidden = false;
+        requestAnimationFrame(() => modal.classList.add('is-open'));
+        document.body.style.overflow = 'hidden';
+        $('input:not([type=hidden]), button', modal).focus();
+      }
+
+      function closeModal(modal, restoreFocus = true) {
+        modal.classList.remove('is-open');
+        modal.hidden = true;
+        document.body.style.overflow = '';
+        if (restoreFocus) {
+          lastFocus?.focus();
+          lastFocus = null;
+        }
+        if (modal.id === 'signupModal') resetSignup();
+        $$('video', modal).forEach((v) => v.pause());
+      }
+
+      document.addEventListener('click', (e) => {
+        const opener = e.target.closest('[data-modal-open]');
+        if (opener) {
+          lastFocus = opener;
+          if (opener.dataset.modalOpen === 'signupModal')
+            prepareSignup({ directionId: opener.dataset.direction });
+          openModal(opener.dataset.modalOpen);
+        }
+        if (e.target.closest('[data-modal-close]') || e.target.classList.contains('modal')) {
+          closeModal(e.target.closest('.modal'));
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') $$('.modal.is-open').forEach((m) => closeModal(m));
+      });
+
+      $$('.chips .chip').forEach((chip) =>
+        chip.addEventListener('click', () => {
+          $$('.chips .chip').forEach((c) => c.classList.toggle('is-active', c === chip));
+          const aud = chip.dataset.aud;
+          $$('.dir').forEach((row) => {
+            row.hidden = aud !== 'all' && !row.dataset.aud.split(',').includes(aud);
+          });
+        })
+      );
+
+      let currentDirection = null;
+
+      $$('.dir__row').forEach((row) =>
+        row.addEventListener('click', () => {
+          currentDirection = JSON.parse(row.dataset.direction);
+          const img = $('#dirImg');
+          img.style.setProperty('--img', currentDirection.img ? `url('${currentDirection.img}')` : 'none');
+          img.classList.toggle('ph--empty', !currentDirection.img);
+          $('#dirImgLabel').textContent = currentDirection.nameRu;
+          const video = $('#dirVideo');
+          video.hidden = !currentDirection.video;
+          img.classList.toggle('has-video', !!currentDirection.video);
+          if (currentDirection.video) {
+            video.poster = currentDirection.poster || '';
+            video.src = currentDirection.video;
+            video.onloadedmetadata = () =>
+              video.classList.toggle('is-vertical', video.videoHeight > video.videoWidth);
+            video.play().catch(() => {});
+          } else {
+            video.removeAttribute('src');
+            video.load();
+          }
+          $('#dirAges').textContent = currentDirection.ages;
+          $('#dirTitle').textContent = currentDirection.name;
+          $('#dirDesc').textContent = currentDirection.description;
+          const list = $('#dirSlots');
+          list.innerHTML = '';
+          (currentDirection.slots.length
+            ? currentDirection.slots
+            : ['Расписание уточняйте у администратора']
+          ).forEach((text) => {
+            const li = document.createElement('li');
+            li.textContent = text;
+            list.append(li);
+          });
+          lastFocus = row;
+          openModal('directionModal');
+        })
+      );
+
+      $('#dirSignup').addEventListener('click', () => {
+        prepareSignup({ directionId: currentDirection.id });
+        openModal('signupModal');
+      });
+
+      const form = $('#signupForm');
+      const errorsBox = $('#formErrors');
+      const chosenSlot = $('#chosenSlot');
+
+      function prepareSignup({ directionId = '', slot = null } = {}) {
+        form.schedule_id.value = slot ? slot.id : '';
+        form.direction_id.value = slot ? slot.directionId : directionId || '';
+        form.direction_id.disabled = !!slot;
+        chosenSlot.hidden = !slot;
+        if (slot) {
+          chosenSlot.innerHTML = `<b></b><span></span><button type="button" aria-label="Убрать занятие">×</button>`;
+          $('b', chosenSlot).textContent = slot.direction;
+          $('span', chosenSlot).textContent = `${slot.day}, ${slot.time} · ${slot.age}`;
+          $('button', chosenSlot).addEventListener('click', () =>
+            prepareSignup({ directionId: slot.directionId })
+          );
+        }
+      }
+
+      function resetSignup() {
+        form.hidden = false;
+        $('#signupDone').hidden = true;
+        showErrors([]);
+      }
+
+      function showErrors(list) {
+        errorsBox.innerHTML = '';
+        list.forEach((text) => {
+          const li = document.createElement('li');
+          li.textContent = text;
+          errorsBox.append(li);
+        });
+        errorsBox.hidden = list.length === 0;
+      }
+
+      function clientValidate() {
+        const errors = [];
+        if (form.name.value.trim().length < 2) errors.push('Укажите имя');
+        if (!/^[78]\d{10}$/.test(form.phone.value.replace(/\D/g, '')))
+          errors.push('Телефон должен содержать 11 цифр');
+        const age = Number(form.student_age.value);
+        if (!Number.isInteger(age) || age < APP.minAge || age > APP.maxAge)
+          errors.push(`Принимаем учеников от ${APP.minAge} лет`);
+        if (!form.agree.checked) errors.push('Нужно согласие на обработку персональных данных');
+        return errors;
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const errors = clientValidate();
+        showErrors(errors);
+        if (errors.length) return;
+
+        const btn = $('[type=submit]', form);
+        btn.disabled = true;
+        btn.textContent = 'Отправляем…';
+        const data = new FormData(form);
+        if (form.direction_id.disabled) data.set('direction_id', form.direction_id.value);
+
+        try {
+          const res = await fetch(form.action, { method: 'POST', body: data });
+          const json = await res.json();
+          if (!json.ok) {
+            showErrors(json.errors);
+            return;
+          }
+          form.reset();
+          prepareSignup();
+          form.hidden = true;
+          $('#signupDoneText').textContent = json.message;
+          $('#signupDone').hidden = false;
+        } catch {
+          showErrors(['Сервер недоступен. Позвоните нам, пожалуйста.']);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Записаться';
+        }
+      });
+
+      const header = $('.header');
+      window.addEventListener('scroll', () => header.classList.toggle('is-scrolled', window.scrollY > 10), {
+        passive: true,
+      });
+    </script>
+    <script>
+      'use strict';
+      (() => {
+        const $ = (s, r = document) => r.querySelector(s);
+        const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const lerp = (a, b, t) => a + (b - a) * t;
+        const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+
+        $$('[data-letters]').forEach((el) => {
+          el.innerHTML = [...el.textContent]
+            .map((ch, i) => `<span class="ch" style="--i:${i}">${ch}</span>`)
+            .join('');
+        });
+        $$('[data-words]').forEach((el) => {
+          el.innerHTML = el.textContent
+            .trim()
+            .split(/\s+/)
+            .map((w) => `<span class="w">${w}</span>`)
+            .join(' ');
+        });
+
+        const bar = $('#preBar');
+        let progress = 0;
+        const started = performance.now();
+        function finishLoading() {
+          document.body.classList.remove('is-loading');
+          document.body.classList.add('is-ready');
+        }
+        if (reduce) {
+          finishLoading();
+        } else {
+          const tick = () => {
+            progress = Math.min(progress + (90 - progress) * 0.06, 90);
+            if (bar) bar.style.transform = `scaleX(${progress / 100})`;
+            if (!document.body.classList.contains('is-ready')) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+          const done = () => {
+            const wait = Math.max(0, 900 - (performance.now() - started));
+            setTimeout(() => {
+              if (bar) bar.style.transform = 'scaleX(1)';
+              setTimeout(finishLoading, 250);
+            }, wait);
+          };
+          if (document.readyState === 'complete') done();
+          else window.addEventListener('load', done, { once: true });
+          setTimeout(done, 3000);
+        }
+
+        const revealIO = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((en) => {
+              if (!en.isIntersecting) return;
+              en.target.classList.add('is-in');
+              revealIO.unobserve(en.target);
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+        );
+        $$('[data-reveal]').forEach((el, i) => {
+          const siblings = [...el.parentElement.children].filter((c) => c.hasAttribute('data-reveal'));
+          el.style.setProperty('--d', `${siblings.indexOf(el) * 0.07}s`);
+          if (reduce) el.classList.add('is-in');
+          else revealIO.observe(el);
+        });
+
+        const countIO = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((en) => {
+              if (!en.isIntersecting) return;
+              const el = en.target;
+              countIO.unobserve(el);
+              const target = Number(el.dataset.count);
+              const suffix = el.dataset.suffix || '';
+              const isYear = target > 1900 && target < 2100;
+              const fmt = (n) => (isYear ? String(n) : n.toLocaleString('ru-RU'));
+              if (reduce) {
+                el.textContent = fmt(target) + suffix;
+                return;
+              }
+              const from = isYear ? 1990 : 0;
+              const t0 = performance.now();
+              const step = (now) => {
+                const p = clamp((now - t0) / 1600, 0, 1);
+                const eased = 1 - Math.pow(1 - p, 4);
+                el.textContent = fmt(Math.round(from + (target - from) * eased)) + (p === 1 ? suffix : '');
+                if (p < 1) requestAnimationFrame(step);
+              };
+              requestAnimationFrame(step);
+            });
+          },
+          { threshold: 0.6 }
+        );
+        $$('[data-count]').forEach((el) => countIO.observe(el));
+
+        $$('.ph').forEach((ph) => {
+          const val = getComputedStyle(ph).getPropertyValue('--img').trim();
+          if (!val || val === 'none' || /url\((['"]?)\1\)/.test(val)) ph.classList.add('ph--empty');
+        });
+
+        const header = $('.header');
+        let lastY = scrollY;
+
+        const manifesto = $('[data-words]');
+        const words = manifesto ? $$('.w', manifesto) : [];
+
+        const parallax = $$('[data-parallax]');
+
+        const hs = $('.hscroll');
+        const hsTrack = hs && $('.hscroll__track', hs);
+        const hsEnabled = () => hs && innerWidth > 900 && !reduce;
+        function sizeHScroll() {
+          if (!hs) return;
+          if (hsEnabled()) {
+            const distance = hsTrack.scrollWidth - innerWidth;
+            hs.style.height = `${innerHeight + distance}px`;
+            hs.classList.add('is-pinned');
+          } else {
+            hs.style.height = '';
+            hs.classList.remove('is-pinned');
+            hsTrack.style.transform = '';
+          }
+        }
+        sizeHScroll();
+        addEventListener('resize', sizeHScroll);
+        addEventListener('load', sizeHScroll);
+
+        function onScroll() {
+          const y = scrollY;
+          header.classList.toggle('is-scrolled', y > 20);
+          header.classList.toggle(
+            'is-hidden',
+            y > lastY && y > 400 && !document.body.classList.contains('menu-open')
+          );
+          lastY = y;
+
+          if (words.length) {
+            const r = manifesto.getBoundingClientRect();
+            const p = clamp((innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.35), 0, 1);
+            const lit = Math.round(p * words.length);
+            words.forEach((w, i) => w.classList.toggle('is-lit', reduce || i < lit));
+          }
+
+          if (!reduce) {
+            parallax.forEach((el) => {
+              const speed = Number(el.dataset.parallax) || 0.2;
+              if (y < innerHeight * 1.5) el.style.transform = `translate3d(0, ${y * speed}px, 0) scale(1.1)`;
+            });
+          }
+
+          if (hsEnabled()) {
+            const r = hs.getBoundingClientRect();
+            const distance = hsTrack.scrollWidth - innerWidth;
+            const p = clamp(-r.top / (hs.offsetHeight - innerHeight), 0, 1);
+            hsTrack.style.transform = `translate3d(${-p * distance}px, 0, 0)`;
+            hs.style.setProperty('--p', p.toFixed(3));
+          }
+        }
+        addEventListener('scroll', () => requestAnimationFrame(onScroll), { passive: true });
+        onScroll();
+
+        if (reduce || !finePointer) return;
+
+        document.documentElement.classList.add('has-cursor');
+        const cursor = $('.cursor');
+        const label = $('.cursor__label');
+        const mouse = { x: innerWidth / 2, y: innerHeight / 2 };
+        const ring = { x: mouse.x, y: mouse.y };
+        addEventListener(
+          'mousemove',
+          (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+          },
+          { passive: true }
+        );
+
+        document.addEventListener('mouseover', (e) => {
+          const target = e.target.closest(
+            'a, button, summary, select, input, textarea, label, [data-cursor]'
+          );
+          cursor.classList.toggle('is-hover', !!target);
+          const text = target?.closest('[data-cursor]')?.dataset.cursor || '';
+          label.textContent = text;
+          cursor.classList.toggle('is-label', !!text);
+          cursor.classList.toggle('is-invert', !!target?.closest('.dir__row'));
+        });
+        document.addEventListener('mousedown', () => cursor.classList.add('is-down'));
+        document.addEventListener('mouseup', () => cursor.classList.remove('is-down'));
+        document.addEventListener('mouseleave', () => cursor.classList.add('is-gone'));
+        document.addEventListener('mouseenter', () => cursor.classList.remove('is-gone'));
+
+        const hero = $('.hero');
+        hero.addEventListener('mousemove', (e) => {
+          const r = hero.getBoundingClientRect();
+          hero.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+          hero.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+          hero.style.setProperty('--tx', (e.clientX / r.width - 0.5).toFixed(3));
+          hero.style.setProperty('--ty', (e.clientY / r.height - 0.5).toFixed(3));
+        });
+
+        $$('.magnetic, .badge-spin').forEach((el) => {
+          el.addEventListener('mousemove', (e) => {
+            const r = el.getBoundingClientRect();
+            const dx = e.clientX - (r.left + r.width / 2);
+            const dy = e.clientY - (r.top + r.height / 2);
+            el.style.transform = `translate(${dx * 0.25}px, ${dy * 0.3}px)`;
+          });
+          el.addEventListener('mouseleave', () => {
+            el.style.transform = '';
+          });
+        });
+
+        $$('.tilt').forEach((card) => {
+          card.addEventListener('mousemove', (e) => {
+            const r = card.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            card.style.transform = `perspective(900px) rotateY(${px * 8}deg) rotateX(${-py * 8}deg) translateY(-4px)`;
+            card.style.setProperty('--gx', `${(px + 0.5) * 100}%`);
+            card.style.setProperty('--gy', `${(py + 0.5) * 100}%`);
+          });
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+          });
+        });
+
+        (function loop() {
+          ring.x = lerp(ring.x, mouse.x, 0.2);
+          ring.y = lerp(ring.y, mouse.y, 0.2);
+          cursor.style.transform = `translate3d(${ring.x}px, ${ring.y}px, 0)`;
+          requestAnimationFrame(loop);
+        })();
+      })();
+    </script>
+  </body>
+</html>
